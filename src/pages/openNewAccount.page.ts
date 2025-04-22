@@ -35,21 +35,39 @@ export class OpenNewAccountPage extends BasePage {
         await super.goto(URL.OPEN_ACCOUNT);
     }
 
-    async openNewAccount(type: string) {
+    async openNewAccount(type: string): Promise<string> {
+        // Select the account type and the first available account
         await this.typeAccountSelect.selectOption(type);
         await this.fromAccountSelect.selectOption({ index: 0 });
+    
         await this.openAccountBtn.click();
-        await this.setNewAccountNumber();
-    }
-
-    async setNewAccountNumber(): Promise<void> {
+    
+        // Wait for the result and retrieve the new account number
         await this.openAccountResult.waitFor({ state: 'visible' });
-
         const accountNumber: string = await this.newAccountNumber.textContent();
+    
         if (!accountNumber) {
             throw new Error('Failed to retrieve the new account number.');
         }
 
-        process.env.CUSTOMER_NEW_ACCOUNT_ID = accountNumber.trim();
+        return accountNumber.trim();
     }
+
+    // async openNewAccount(type: string): Promise<void> {
+    //     await this.typeAccountSelect.selectOption(type);
+    //     await this.fromAccountSelect.selectOption({ index: 0 });
+    //     await this.openAccountBtn.click();
+    //     await this.setNewAccountNumber();
+    // }
+
+    // async setNewAccountNumber(): Promise<void> {
+    //     await this.openAccountResult.waitFor({ state: 'visible' });
+
+    //     const accountNumber: string = await this.newAccountNumber.textContent();
+    //     if (!accountNumber) {
+    //         throw new Error('Failed to retrieve the new account number.');
+    //     }
+
+    //     process.env.CUSTOMER_NEW_ACCOUNT_ID = accountNumber.trim();
+    // }
 }

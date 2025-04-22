@@ -9,7 +9,7 @@ export type UserData = {
     ssn: string;
 };
 
-export type UserRegisterData = UserData & {
+export type CustomerRegisterData = UserData & {
     username: string;
     password: string;
     confirmPassword: string;

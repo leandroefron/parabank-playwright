@@ -1,16 +1,15 @@
 import { test, expect } from '../fixtures/custom.fixture';
 import { AccountOverviewPage } from 'src/pages/accountOverview.page';
+import { MINIMUM_BALANCE } from 'src/constants';
 
 test.describe('Accounts tests', { tag: ['@accounts'] }, () => {
-    test('should be able to open a new account', async ({ openNewAccountPage, homePage }) => {
-        await openNewAccountPage.openNewAccount('CHECKING');
+    test('should be able to open a new account successfully', async ({ openNewAccountPage }) => {
+        const accountNumber: string = await openNewAccountPage.openNewAccount('CHECKING');
 
-        const accountOverviewPage: AccountOverviewPage = await homePage.sidebar.openAccountsOverview();
+        const accountOverviewPage: AccountOverviewPage = await openNewAccountPage.sidebar.openAccountsOverview();
 
-        const availableAmount: string = await accountOverviewPage.getAvailableAmount(process.env.CUSTOMER_NEW_ACCOUNT_ID);
+        const balance: string = await accountOverviewPage.getBalanceFromAccount(accountNumber);
 
-        const expectedAmount: string = process.env.MIN_BALANCE;
-
-        expect(availableAmount).toBe(expectedAmount);
+        expect(balance).toBe(MINIMUM_BALANCE);
     });
 });

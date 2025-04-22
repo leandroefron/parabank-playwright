@@ -3,15 +3,15 @@ import { Page, Locator } from '@playwright/test';
 export class AccountOverviewPage {
     constructor(private page: Page) {}
 
-    get container(): Locator {
-        return this.page.getByTestId('overviewAccountsApp');
+    get overview(): Locator {
+        return this.page.getByTestId('showOverview');
     }
 
     get accountTable(): Locator {
         return this.page.getByTestId('accountTable').locator('tbody');
     }
 
-    async getAvailableAmount(accountNumber: string): Promise<string | null> {
+    async getBalanceFromAccount(accountNumber: string): Promise<string | null> {
         await this.accountTable.waitFor({ state: 'visible' });
         // Locate the row containing the account number
         const row: Locator = this.accountTable
@@ -26,10 +26,10 @@ export class AccountOverviewPage {
             return null; // Account number not found
         }
 
-        // Get the text content of the third cell in the row
-        const availableAmount = await row.locator('td:nth-child(3)').textContent();
+        // Get the text content of the second cell in the row
+        const balance: string = await row.locator('td:nth-child(2)').textContent();
 
-        return availableAmount?.replace('$', '').trim() || null;
+        return balance?.replace('$', '').trim() || null;
     }
 
     async getAccountsQty(): Promise<number> {

@@ -14,7 +14,7 @@ setup('Creating new customer', async () => {
         const registerPage = new RegisterPage(page);
         await registerPage.goto();
 
-        const username: string = await registerPage.fillAllFields(customerData, true);
+        const username: string = await registerPage.fillRegisterForm(customerData, true);
         await setCustomerEnvVars(username, customerData.password);
 
         await page.context().storageState({ path: STORAGE_STATE });

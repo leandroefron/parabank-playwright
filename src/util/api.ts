@@ -18,6 +18,20 @@ export async function cleanDatabase(): Promise<void> {
     }
 }
 
+export async function initializeDatabase(): Promise<void> {
+    try {
+        const baseURL = `${process.env.BASE_URL}${process.env.SERVICES_URL}`;
+        const apiContext: APIRequestContext = await createApiContext();
+        const response: APIResponse = await apiContext.post(`${baseURL}/initializeDB`, {
+            data: ''
+        });
+
+        expect(response.status()).toBe(204);
+    } catch (error) {
+        throw new Error('Error initializing database: ' + error);
+    }
+}
+
 export async function getCustomerId(username: string, password: string): Promise<string> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
@@ -95,5 +109,18 @@ export async function getAccountById(accountId: string): Promise<AccountData> {
         return body;
     } catch (error) {
         throw new Error('Getting account: ' + error);
+    }
+}
+
+export async function setParameter(name: string, value: string): Promise<void> {
+    try {
+        const apiContext: APIRequestContext = await createApiContext();
+        const response: APIResponse = await apiContext.post(`${baseURL}/setParameter/${name}/${value}`, {
+            data: ''
+        });
+
+        expect(response.status()).toBe(204);
+    } catch (error) {
+        throw new Error('Error cleaning database: ' + error);
     }
 }

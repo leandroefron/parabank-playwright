@@ -45,15 +45,15 @@ export default defineConfig({
 
     projects: [
         {
-            name: 'clean-db',
+            name: 'init-setup',
             testDir: './config',
-            testMatch: 'cleanDb.setup.ts'
+            testMatch: 'init.setup.ts'
         },
         {
             name: 'create-customer',
             testDir: './config',
             testMatch: 'createCustomer.setup.ts',
-            dependencies: ['clean-db']
+            dependencies: ['init-setup']
         },
         {
             name: 'e2e_logged_in',

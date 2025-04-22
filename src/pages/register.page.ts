@@ -2,7 +2,7 @@ import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 import { URL } from '../constants';
 import { getRandomUsername } from 'src/util/helpers';
-import { UserRegisterData } from '../types/index';
+import { CustomerRegisterData } from '../types/index';
 
 export class RegisterPage extends BasePage {
     constructor(page: Page) {
@@ -109,14 +109,14 @@ export class RegisterPage extends BasePage {
         await super.goto(URL.REGISTER);
     }
 
-    async fillRegisterForm(userData: UserRegisterData, submit: boolean): Promise<string> {
+    async fillRegisterForm(customerData: CustomerRegisterData, submit: boolean): Promise<string> {
         try {
             await this.customerForm.waitFor({ state: 'visible' });
 
             // Generate a random username
-            userData.username = await getRandomUsername();
+            customerData.username = await getRandomUsername();
 
-            if (!userData.username || userData.username.trim() === '') {
+            if (!customerData.username || customerData.username.trim() === '') {
                 throw new Error('Generated username is empty or invalid.');
             }
 
@@ -137,8 +137,8 @@ export class RegisterPage extends BasePage {
 
             // Fill each field dynamically
             for (const [key, input] of Object.entries(fieldMap)) {
-                if (userData[key]) {
-                    await input.fill(userData[key]);
+                if (customerData[key]) {
+                    await input.fill(customerData[key]);
                 }
             }
 
@@ -146,7 +146,7 @@ export class RegisterPage extends BasePage {
                 await this.submitBtn.click();
             }
 
-            return userData.username;
+            return customerData.username;
         } catch (error) {
             console.error('Error filling the registration form: ', error);
             throw error;

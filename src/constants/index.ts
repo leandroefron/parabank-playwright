@@ -1,3 +1,7 @@
+export const INITIAL_BALANCE = '1000.00';
+export const MINIMUM_BALANCE = '100.00';
+export const TRANSFER_AMOUNT = '50.00';
+
 export const URL = {
     REGISTER: '/parabank/register.htm',
     LANDING: '/parabank/index.htm',
