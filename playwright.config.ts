@@ -59,7 +59,13 @@ export default defineConfig({
             name: 'e2e_logged_in',
             use: { storageState: STORAGE_STATE },
             testDir: './src/tests',
-            testMatch: ['userInfo.spec.ts', 'accounts.spec.ts', 'openNewAccount.spec.ts', 'billPay.spec.ts', 'transferFunds.spec.ts', 'requestLoan.spec.ts'],
+            testMatch: [
+                'userInfo.spec.ts', 
+                'accounts.spec.ts', 
+                'openNewAccount.spec.ts', 
+                'billPay.spec.ts', 
+                'transferFunds.spec.ts', 
+                'requestLoan.spec.ts'],
             dependencies: ['create-user']
         },
         {
@@ -68,5 +74,7 @@ export default defineConfig({
             testMatch: ['login.spec.ts', 'register.spec.ts'],
             dependencies: ['create-user']
         }
-    ]
+    ],
+    // Use grep to filter tests by tags
+    grep: process.env.TEST_TAG ? new RegExp(process.env.TEST_TAG) : undefined,
 });
