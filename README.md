@@ -99,8 +99,9 @@ Test reports are generated locally. You can view the report in one of the follow
 - Loan Requests: Tests loan application and approval/denial scenarios.
 
 
-## 🗂️ Scripts
-- **`test:local`**: Run tests locally.
-- **`test:docker`**: Build image and run tests inside a Docker container.
+## 🎯 Formatting
+To maintain consistent code style across the project
 - **`prettier:check`**: Check code formatting using Prettier.
 - **`prettier:fix`**: Automatically fix code formatting issues using Prettier.
+
+The project uses a custom Prettier configuration defined in the `.prettierrc.json` file
