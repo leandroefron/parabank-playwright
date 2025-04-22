@@ -1,5 +1,5 @@
 import { BasePage } from './base.page';
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { URL } from 'src/constants';
 
 export class OpenNewAccountPage extends BasePage {
@@ -7,27 +7,27 @@ export class OpenNewAccountPage extends BasePage {
         super(page);
     }
 
-    get container() {
+    get container(): Locator {
         return this.page.getByTestId('openAccountForm');
     }
 
-    get typeAccountSelect() {
+    get typeAccountSelect(): Locator {
         return this.page.getByTestId('type');
     }
 
-    get fromAccountSelect() {
+    get fromAccountSelect(): Locator {
         return this.page.getByTestId('fromAccountId');
     }
 
-    get openAccountBtn() {
+    get openAccountBtn(): Locator {
         return this.page.locator('input[value="Open New Account"]');
     }
 
-    get openAccountResult() {
+    get openAccountResult(): Locator {
         return this.page.getByTestId('openAccountResult');
     }
 
-    get newAccountNumber() {
+    get newAccountNumber(): Locator {
         return this.page.getByTestId('newAccountId');
     }
 
@@ -42,7 +42,7 @@ export class OpenNewAccountPage extends BasePage {
         await this.setNewAccountNumber();
     }
 
-    async setNewAccountNumber() {
+    async setNewAccountNumber(): Promise<void> {
         await this.openAccountResult.waitFor({ state: 'visible' });
 
         const accountNumber: string = await this.newAccountNumber.textContent();

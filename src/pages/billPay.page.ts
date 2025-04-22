@@ -1,5 +1,5 @@
 import { BasePage } from './base.page';
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { URL } from '../constants';
 import { BillPayData } from 'src/types';
 
@@ -8,55 +8,55 @@ export class BillPayPage extends BasePage {
         super(page);
     }
 
-    get billPayForm() {
+    get billPayForm(): Locator {
         return this.page.getByTestId('billpayForm');
     }
 
-    get billPayResult() {
+    get billPayResult(): Locator {
         return this.page.getByTestId('billpayResult');
     }
 
-    get payeeNameInput() {
+    get payeeNameInput(): Locator {
         return this.page.locator('input[name="payee.name"]');
     }
 
-    get addressInput() {
+    get addressInput(): Locator {
         return this.page.locator('input[name="payee.address.street"]');
     }
 
-    get cityInput() {
+    get cityInput(): Locator {
         return this.page.locator('input[name="payee.address.city"]');
     }
 
-    get stateInput() {
+    get stateInput(): Locator {
         return this.page.locator('input[name="payee.address.state"]');
     }
 
-    get zipCodeInput() {
+    get zipCodeInput(): Locator {
         return this.page.locator('input[name="payee.address.zipCode"]');
     }
 
-    get phoneInput() {
+    get phoneInput(): Locator {
         return this.page.locator('input[name="payee.phoneNumber"]');
     }
 
-    get accountInput() {
+    get accountInput(): Locator {
         return this.page.locator('input[name="payee.accountNumber"]');
     }
 
-    get fromAccountSelect() {
+    get fromAccountSelect(): Locator {
         return this.page.locator('select[name="fromAccountId"]');
     }
 
-    get verifyAccountInput() {
+    get verifyAccountInput(): Locator {
         return this.page.locator('input[name="verifyAccount"]');
     }
 
-    get amountInput() {
+    get amountInput(): Locator {
         return this.page.locator('input[name="amount"]');
     }
 
-    get sendPaymentBtn() {
+    get sendPaymentBtn(): Locator {
         return this.billPayForm.locator('input[value="Send Payment"]');
     }
 
@@ -64,7 +64,7 @@ export class BillPayPage extends BasePage {
         await super.goto(URL.BILL_PAY);
     }
 
-    async fillAllFields(billPayData: BillPayData, submit: boolean): Promise<void> {
+    async fillBillPayForm(billPayData: BillPayData, submit: boolean): Promise<void> {
         try {
             await this.billPayForm.waitFor({ state: 'visible' });
 

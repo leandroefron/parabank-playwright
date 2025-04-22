@@ -1,5 +1,5 @@
 import { BasePage } from './base.page';
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { URL } from '../constants';
 import { getRandomUsername } from 'src/util/helpers';
 import { UserRegisterData } from '../types/index';
@@ -9,99 +9,99 @@ export class RegisterPage extends BasePage {
         super(page);
     }
 
-    get customerForm() {
+    get customerForm(): Locator {
         return this.page.getByTestId('customerForm');
     }
 
-    get firstNameInput() {
+    get firstNameInput(): Locator {
         return this.page.getByTestId('customer.firstName');
     }
 
-    get firstNameError() {
+    get firstNameError(): Locator {
         return this.page.getByTestId('customer.firstName.errors');
     }
 
-    get lastNameInput() {
+    get lastNameInput(): Locator {
         return this.page.getByTestId('customer.lastName');
     }
 
-    get lastNameError() {
+    get lastNameError(): Locator {
         return this.page.getByTestId('customer.lastName.errors');
     }
 
-    get addressInput() {
+    get addressInput(): Locator {
         return this.page.getByTestId('customer.address.street');
     }
 
-    get addressError() {
+    get addressError(): Locator {
         return this.page.getByTestId('customer.address.street.errors');
     }
 
-    get cityInput() {
+    get cityInput(): Locator {
         return this.page.getByTestId('customer.address.city');
     }
 
-    get cityError() {
+    get cityError(): Locator {
         return this.page.getByTestId('customer.address.city.errors');
     }
 
-    get stateInput() {
+    get stateInput(): Locator {
         return this.page.getByTestId('customer.address.state');
     }
 
-    get stateError() {
+    get stateError(): Locator {
         return this.page.getByTestId('customer.address.state.errors');
     }
 
-    get zipCodeInput() {
+    get zipCodeInput(): Locator {
         return this.page.getByTestId('customer.address.zipCode');
     }
 
-    get zipCodeError() {
+    get zipCodeError(): Locator {
         return this.page.getByTestId('customer.address.zipCode.errors');
     }
 
-    get phoneNumberInput() {
+    get phoneNumberInput(): Locator {
         return this.page.getByTestId('customer.phoneNumber');
     }
 
-    get phoneNumberError() {
+    get phoneNumberError(): Locator {
         return this.page.getByTestId('customer.phoneNumber.errors');
     }
 
-    get ssnInput() {
+    get ssnInput(): Locator {
         return this.page.getByTestId('customer.ssn');
     }
 
-    get ssnError() {
+    get ssnError(): Locator {
         return this.page.getByTestId('customer.ssn.errors');
     }
 
-    get usernameInput() {
+    get usernameInput(): Locator {
         return this.page.getByTestId('customer.username');
     }
 
-    get usernameError() {
+    get usernameError(): Locator {
         return this.page.getByTestId('customer.username.errors');
     }
 
-    get passwordInput() {
+    get passwordInput(): Locator {
         return this.page.getByTestId('customer.password');
     }
 
-    get passwordError() {
+    get passwordError(): Locator {
         return this.page.getByTestId('customer.password.errors');
     }
 
-    get confirmInput() {
+    get confirmInput(): Locator {
         return this.page.getByTestId('repeatedPassword');
     }
 
-    get confirmError() {
+    get confirmError(): Locator {
         return this.page.getByTestId('repeatedPassword.errors');
     }
 
-    get submitBtn() {
+    get submitBtn(): Locator {
         return this.customerForm.locator('input[type="submit"]');
     }
 
@@ -109,7 +109,7 @@ export class RegisterPage extends BasePage {
         await super.goto(URL.REGISTER);
     }
 
-    async fillAllFields(userData: UserRegisterData, submit: boolean): Promise<string> {
+    async fillRegisterForm(userData: UserRegisterData, submit: boolean): Promise<string> {
         try {
             await this.customerForm.waitFor({ state: 'visible' });
 

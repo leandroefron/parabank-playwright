@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/custom.fixture';
-import { userData } from 'src/data';
+import { customerData } from 'src/data';
 import { MESSAGES } from 'src/constants';
 
 const fieldMap = {
@@ -18,7 +18,7 @@ const fieldMap = {
 
 test.describe('Register page tests', { tag: ['@register'] }, () => {
     test('should be able to register a new user', async ({ registerPage, homePage }) => {
-        const username: string = await registerPage.fillAllFields(userData, true);
+        const username: string = await registerPage.fillRegisterForm(customerData, true);
         await homePage.title.waitFor({ state: 'visible' });
 
         expect(homePage.title).toHaveText(`Welcome ${username}`);
@@ -27,7 +27,7 @@ test.describe('Register page tests', { tag: ['@register'] }, () => {
 
     for (const [key, { tag, testId, errorId }] of Object.entries(fieldMap)) {
         test(`should show validation error when '${tag}' is empty`, async ({ registerPage, page }) => {
-            await registerPage.fillAllFields(userData, false);
+            await registerPage.fillRegisterForm(customerData, false);
 
             // Clear the specific field being tested
             await page.getByTestId(testId).fill('');

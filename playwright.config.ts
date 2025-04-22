@@ -50,9 +50,9 @@ export default defineConfig({
             testMatch: 'cleanDb.setup.ts'
         },
         {
-            name: 'create-user',
+            name: 'create-customer',
             testDir: './config',
-            testMatch: 'createUser.setup.ts',
+            testMatch: 'createCustomer.setup.ts',
             dependencies: ['clean-db']
         },
         {
@@ -60,13 +60,13 @@ export default defineConfig({
             use: { storageState: STORAGE_STATE },
             testDir: './src/tests',
             testMatch: ['userInfo.spec.ts', 'accounts.spec.ts', 'openNewAccount.spec.ts', 'billPay.spec.ts', 'transferFunds.spec.ts', 'requestLoan.spec.ts'],
-            dependencies: ['create-user']
+            dependencies: ['create-customer']
         },
         {
             name: 'e2e',
             testDir: './src/tests',
             testMatch: ['login.spec.ts', 'register.spec.ts'],
-            dependencies: ['create-user']
+            dependencies: ['create-customer']
         }
     ],
     // Use grep to filter tests by tags

@@ -1,6 +1,6 @@
 import { BillPayData, UserRegisterData } from 'src/types';
 
-export const userData: UserRegisterData = {
+export const customerData: UserRegisterData = {
     firstName: 'Peter',
     lastName: 'Smith',
     address: '1234 Main St',
@@ -28,12 +28,12 @@ export const profileFieldMap = {
 };
 
 export const billPayData: BillPayData = {
-    payeeName: `${userData.firstName} ${userData.lastName}`,
-    address: userData.address,
-    city: userData.city,
-    state: userData.state,
-    zipCode: userData.zipCode,
-    phoneNumber: userData.phoneNumber,
+    payeeName: `${customerData.firstName} ${customerData.lastName}`,
+    address: customerData.address,
+    city: customerData.city,
+    state: customerData.state,
+    zipCode: customerData.zipCode,
+    phoneNumber: customerData.phoneNumber,
     account: '222555',
     verifyAccount: '222555',
     amount: '50'

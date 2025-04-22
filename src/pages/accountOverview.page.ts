@@ -3,11 +3,11 @@ import { Page, Locator } from '@playwright/test';
 export class AccountOverviewPage {
     constructor(private page: Page) {}
 
-    get container() {
+    get container(): Locator {
         return this.page.getByTestId('overviewAccountsApp');
     }
 
-    get accountTable() {
+    get accountTable(): Locator {
         return this.page.getByTestId('accountTable').locator('tbody');
     }
 
