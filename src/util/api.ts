@@ -18,10 +18,10 @@ export async function cleanDatabase(): Promise<void> {
     }
 }
 
-export async function getCustomerId(user: string, password: string): Promise<string> {
+export async function getCustomerId(username: string, password: string): Promise<string> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.get(`${baseURL}/login/${user}/${password}`);
+        const response: APIResponse = await apiContext.get(`${baseURL}/login/${username}/${password}`);
 
         expect(response.status()).toBe(200);
 
@@ -33,10 +33,10 @@ export async function getCustomerId(user: string, password: string): Promise<str
     }
 }
 
-export async function getCustomerDetails(userId: string): Promise<CustomerData> {
+export async function getCustomerDetails(customerId: string): Promise<CustomerData> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.get(`${baseURL}/customers/${userId}`);
+        const response: APIResponse = await apiContext.get(`${baseURL}/customers/${customerId}`);
 
         expect(response.status()).toBe(200);
 

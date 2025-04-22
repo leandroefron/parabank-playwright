@@ -8,13 +8,12 @@
     "docker:run": "docker run -it --rm -v $PWD/reports:/app/reports playwright-tests",
     "test:docker": "npm run docker:build && npm run docker:run",
     "test:local": "npx playwright test",
-    "test:tag": "npx playwright test --grep @TAG",
     "reports": "npx playwright show-report reports",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Leandro Efron",
   "license": "ISC",
   "dependencies": {
     "@playwright/test": "^1.51.1"

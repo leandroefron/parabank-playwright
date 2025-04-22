@@ -10,7 +10,7 @@ const accountData: CreateAccountData = {
     fromAccountId: process.env.CUSTOMER_DEFAULT_ACCOUNT
 };
 
-test.describe('Transfer funds tests', { tag: ['@billPay'] }, () => {
+test.describe('Transfer funds tests', { tag: ['@transfers'] }, () => {
     test.beforeAll(async () => {
         newAccount = await createAccount(accountData);
     });

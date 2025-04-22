@@ -19,12 +19,12 @@ export default defineConfig({
 
     // Timeouts for assertions
     expect: {
-        timeout: 10_000,
-      },
+        timeout: 10_000
+    },
 
     // Reporters
     reporter: [
-        ['html', { open: 'never', outputFolder: 'reports' }], 
+        ['html', { open: 'never', outputFolder: 'reports' }],
         ['list', { printSteps: true }]
     ],
 
@@ -36,10 +36,10 @@ export default defineConfig({
         trace: 'on-first-retry',
         headless: false,
 
-        // Enables data-testid attribute using id 
+        // Enables data-testid attribute using id
         testIdAttribute: 'id',
 
-        // Takes a screenshot on failure 
+        // Takes a screenshot on failure
         screenshot: 'only-on-failure'
     },
 
@@ -59,13 +59,7 @@ export default defineConfig({
             name: 'e2e_logged_in',
             use: { storageState: STORAGE_STATE },
             testDir: './src/tests',
-            testMatch: [
-                'userInfo.spec.ts', 
-                'accounts.spec.ts', 
-                'openNewAccount.spec.ts', 
-                'billPay.spec.ts', 
-                'transferFunds.spec.ts', 
-                'requestLoan.spec.ts'],
+            testMatch: ['userInfo.spec.ts', 'accounts.spec.ts', 'openNewAccount.spec.ts', 'billPay.spec.ts', 'transferFunds.spec.ts', 'requestLoan.spec.ts'],
             dependencies: ['create-user']
         },
         {
@@ -76,5 +70,5 @@ export default defineConfig({
         }
     ],
     // Use grep to filter tests by tags
-    grep: process.env.TEST_TAG ? new RegExp(process.env.TEST_TAG) : undefined,
+    grep: process.env.TEST_TAG ? new RegExp(process.env.TEST_TAG) : undefined
 });

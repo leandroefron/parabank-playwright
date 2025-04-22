@@ -74,7 +74,16 @@ Run a specific test by tag:
 ```bash
 npm run test:tag --grep @[tag]
 ```
+Possibles tags:
+- login
+- register
+- customers
+- accounts
+- billpay
+- loans
+- transfers
 
+---
 ### 🐳 Run in Docker 
 This method ensures environment consistency with no local setup needed.
 Running this command will build the Docker image and then run the tests inside the Docker container.
@@ -91,16 +100,16 @@ Test reports are generated locally. You can view the report in one of the follow
 - Run `npm run reports`
 
 ## 🛠 Project Features
-- User Registration: Automates the process of registering a new user.
-- Login and Logout: Validates user login and logout functionality.
-- Account Management: Tests account creation and overview.
-- Fund Transfers: Verifies fund transfer between accounts.
-- Bill Payments: Automates bill payment functionality.
-- Loan Requests: Tests loan application and approval/denial scenarios.
+- **User Registration:** Automates the process of registering a new user.
+- **Login and Logout:** Validates user login and logout functionality.
+- **Account Management:** Tests account creation and overview.
+- **Fund Transfers:** Verifies fund transfer between accounts.
+- **Bill Payments:** Automates bill payment functionality.
+- **Loan Requests:** Tests loan application and approval/denial scenarios.
 
 
 ## 🎯 Formatting
-To maintain consistent code style across the project
+To maintain consistent code style across the project, run following scripts:
 - **`prettier:check`**: Check code formatting using Prettier.
 - **`prettier:fix`**: Automatically fix code formatting issues using Prettier.
 

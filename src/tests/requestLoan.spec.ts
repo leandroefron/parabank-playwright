@@ -28,7 +28,7 @@ test.describe.serial('Request Loan tests', { tag: ['@loans'] }, () => {
         const downPayment: number = availableBalance + 1;
 
         await requestLoanPage.applyForALoan(loanAmount, downPayment);
-        
+
         expect(requestLoanPage.loanStatus).toHaveText('Denied');
         expect(requestLoanPage.loanRequestDeniedMsg).toHaveText(MESSAGES.LOAN_DENIED_NO_FUNDS);
     });
