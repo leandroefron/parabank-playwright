@@ -19,7 +19,8 @@ export const MESSAGES = {
     LOAN_APPROVED: 'Congratulations, your loan has been approved.',
     LOAN_DENIED_AMOUNT: 'We cannot grant a loan in that amount with your available funds and down payment.',
     LOAN_DENIED_NO_FUNDS: 'You do not have sufficient funds for the given down payment.',
-    VALIDATION_ERROR: '{field} is required.'
+    VALIDATION_ERROR: '{field} is required.',
+    WELCOME: 'Welcome {name}'
 };
 
 export const TITLES = {

@@ -144,6 +144,7 @@ export class RegisterPage extends BasePage {
 
             if (submit) {
                 await this.submitBtn.click();
+                await this.title.waitFor({ state: 'visible' });
             }
 
             return customerData.username;

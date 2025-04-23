@@ -18,8 +18,6 @@ const fields: Array<{ tag: string, testId: string, errorId: string }> = [
 test.describe('Register page', { tag: ['@register'] }, () => {
     test('should be able to register a new customer successfully', async ({ registerPage }) => {
         const username: string = await registerPage.fillRegisterForm(customerData, true);
-        
-        await registerPage.title.waitFor({ state: 'visible' });
 
         await expect(registerPage.title).toHaveText(`Welcome ${username}`);
         await expect(registerPage.bodyMessage).toHaveText(MESSAGES.ACCOUNT_CREATED);
