@@ -1,6 +1,6 @@
-import { BillPayData, CustomerRegisterData } from 'src/types';
+import { BillPayData, CustomerData } from 'src/types';
 
-export const customerData: CustomerRegisterData = {
+export const customerData: CustomerData = {
     firstName: 'Peter',
     lastName: 'Smith',
     address: '1234 Main St',
@@ -14,17 +14,6 @@ export const customerData: CustomerRegisterData = {
     confirmPassword: 'a'
     // password: 'Password123!',
     // confirmPassword: 'Password123!'
-};
-
-export const profileFieldMap = {
-    firstName: 'firstName',
-    lastName: 'lastName',
-    phoneNumber: 'phoneNumber',
-    city: 'address.city',
-    address: 'address.street',
-    state: 'address.state',
-    zipCode: 'address.zipCode',
-    ssn: 'ssn'
 };
 
 export const billPayData: BillPayData = {

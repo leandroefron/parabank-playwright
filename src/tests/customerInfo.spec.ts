@@ -1,35 +1,26 @@
 import { test, expect } from '../fixtures/custom.fixture';
-import { profileFieldMap } from 'src/data';
 import { getCustomerDetails } from 'src/util/api';
+import { CustomerData } from 'src/types';
 
-const updatedProfileData = {
+const updatedProfileData: CustomerData = {
     firstName: 'FirstNameModified',
     lastName: 'LastNameModified',
     city: 'CityModified',
     phoneNumber: '999-111-000'
 };
 
-/**
- * Validates that the updated profile data matches the expected values.
- * @param updatedData - The data that was updated.
- * @param fieldMap - A mapping of field names to their paths in the customer details object.
- * @param customerDetails - The customer details object retrieved from the API.
- */
-async function validateUpdatedProfileData(updatedData: { [key: string]: string }, fieldMap: { [key: string]: string }, customerDetails: object): Promise<void> {
-    for (const [key, expectedValue] of Object.entries(updatedData)) {
-        const path: string = fieldMap[key as keyof typeof updatedProfileData];
-        const actualValue: any = path.split('.').reduce((obj, k) => obj?.[k], customerDetails);
-
-        expect(actualValue).toBe(expectedValue);
+export function validateUpdatedProfileData<T extends Record<string, any>>(expected: Partial<T>, actual: T): void {
+    for (const [key, value] of Object.entries(expected)) {
+      expect(actual[key], `Mismatch on field "${key}"`).toBe(value);
     }
-}
+  }
 
 test.describe('Customer info tests', { tag: ['@customers'] }, () => {
-    test('should update customer contact info', async ({ updateInfoPage }) => {
-        await updateInfoPage.updateFields(updatedProfileData);
+    test('should update customer contact info successfully', async ({ updateInfoPage }) => {
+        await updateInfoPage.fillAndSubmitUpdateForm(updatedProfileData);
 
-        const customerDetails: object = await getCustomerDetails(process.env.CUSTOMER_ID);
+        const customerDetails: CustomerData = await getCustomerDetails(process.env.CUSTOMER_ID);
 
-        await validateUpdatedProfileData(updatedProfileData, profileFieldMap, customerDetails);
+        validateUpdatedProfileData(updatedProfileData, customerDetails);
     });
 });

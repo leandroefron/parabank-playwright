@@ -1,21 +1,19 @@
-export type UserData = {
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phoneNumber: string;
-    ssn: string;
+export interface CustomerData {
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    phoneNumber?: string;
+    ssn?: string;
+    username?: string;
+    password?: string;
+    confirmPassword?: string;
 };
 
-export type CustomerRegisterData = UserData & {
-    username: string;
-    password: string;
-    confirmPassword: string;
-};
-
-export type BillPayData = {
+export interface BillPayData {
     payeeName: string;
     address: string;
     city: string;
@@ -27,28 +25,14 @@ export type BillPayData = {
     amount: string;
 };
 
-export type AccountData = {
+export interface AccountData {
     id: string;
     customerId: string;
     type: string;
     balance: string;
 };
 
-export type CustomerData = {
-    id: string;
-    firstName: string;
-    lastName: string;
-    address: {
-        street: string;
-        city: string;
-        state: string;
-        zipCode: string;
-    };
-    phoneNumber: string;
-    ssn: string;
-};
-
-export type CreateAccountData = {
+export interface CreateAccountData {
     customerId: string;
     newAccountType: string;
     fromAccountId: string;

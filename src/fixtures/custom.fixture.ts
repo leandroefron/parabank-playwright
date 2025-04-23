@@ -7,7 +7,7 @@ import { OpenNewAccountPage } from 'src/pages/openNewAccount.page';
 import { AccountOverviewPage } from 'src/pages/accountOverview.page';
 import { TransferFundsPage } from 'src/pages/transferFunds.page';
 import { BillPayPage } from 'src/pages/billPay.page';
-import { UpdateInfoPage } from 'src/pages/updateInfo.page';
+import { UpdateInfoPage } from 'src/pages/customerInfo.page';
 import { RequestLoanPage } from 'src/pages/requestLoan.page';
 
 interface PageObjects {

@@ -1,5 +1,5 @@
 import { APIRequestContext, APIResponse, expect } from '@playwright/test';
-import { createApiContext } from './helpers';
+import { createApiContext, mapCustomerData } from './helpers';
 import { AccountData, CreateAccountData, CustomerData } from 'src/types';
 
 const baseURL = `${process.env.BASE_URL}${process.env.SERVICES_URL}`;
@@ -39,9 +39,10 @@ export async function getCustomerId(username: string, password: string): Promise
 
         expect(response.status()).toBe(200);
 
-        const body: CustomerData = await response.json();
+        const body: any = await response.json();
+        const customerData: CustomerData = mapCustomerData(body);
 
-        return body.id;
+        return customerData.id;
     } catch (error) {
         throw new Error('Getting customer id: ' + error);
     }
@@ -55,8 +56,9 @@ export async function getCustomerDetails(customerId: string): Promise<CustomerDa
         expect(response.status()).toBe(200);
 
         const body: CustomerData = await response.json();
+        const customerData: CustomerData = mapCustomerData(body);
 
-        return body;
+        return customerData;
     } catch (error) {
         throw new Error('Getting customer details: ' + error);
     }

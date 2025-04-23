@@ -3,6 +3,7 @@ import { Locator, Page } from '@playwright/test';
 import { APIRequestContext, request } from '@playwright/test';
 import * as api from './api';
 import { AccountData } from 'src/types';
+import { CustomerData } from 'src/types';
 export const authFile = 'playwright/.auth/user.json';
 
 const ROOT_DIR = process.cwd();
@@ -87,4 +88,18 @@ export async function getBalanceFromAccount(accountId: string): Promise<number> 
     } catch (error) {
         throw new Error(`Failed to retrieve balance for account "${accountId}": ${error}`);
     }
+}
+
+export function mapCustomerData(data: any): CustomerData {
+    return {
+        id: data.id ?? '', 
+        firstName: data.firstName ?? '', 
+        lastName: data.lastName ?? '',
+        address: data.address.street ?? '', 
+        city: data.address.city ?? '',
+        state: data.address.state ?? '',
+        zipCode: data.address.zipCode ?? '',
+        phoneNumber: data.phoneNumber ?? '', 
+        ssn: data.ssn ?? ''
+    };
 }

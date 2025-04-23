@@ -1,10 +1,9 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 import { URL } from 'src/constants';
+import { CustomerData } from 'src/types/index'
 
 export class UpdateInfoPage extends BasePage {
-    readonly page: Page;
-
     constructor(page: Page) {
         super(page);
     }
@@ -49,7 +48,7 @@ export class UpdateInfoPage extends BasePage {
         await super.goto(URL.PROFILE);
     }
 
-    async updateFields(fieldsToUpdate: { [key: string]: string }): Promise<void> {
+    async fillAndSubmitUpdateForm(fieldsToUpdate: CustomerData): Promise<void> {
         await this.updateProfileForm.waitFor({ state: 'visible' });
 
         const fieldMap = {
@@ -63,13 +62,20 @@ export class UpdateInfoPage extends BasePage {
         };
 
         for (const [field, value] of Object.entries(fieldsToUpdate)) {
-            const input = fieldMap[field];
+            const input: Locator = fieldMap[field];
             if (!input) {
                 throw new Error(`Field "${field}" is not recognized.`);
             }
+    
+            const isEditable: boolean = await input.isEditable();
+            if (!isEditable) {
+                throw new Error(`Field "${field}" is not editable.`);
+            }
+            await this.page.waitForTimeout(400);
             await input.fill(value);
         }
 
         await this.updateBtn.click();
     }
+
 }

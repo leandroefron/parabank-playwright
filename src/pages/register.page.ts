@@ -2,7 +2,7 @@ import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 import { URL } from '../constants';
 import { getRandomUsername } from 'src/util/helpers';
-import { CustomerRegisterData } from '../types/index';
+import { CustomerData } from '../types/index';
 
 export class RegisterPage extends BasePage {
     constructor(page: Page) {
@@ -109,7 +109,7 @@ export class RegisterPage extends BasePage {
         await super.goto(URL.REGISTER);
     }
 
-    async fillRegisterForm(customerData: CustomerRegisterData, submit: boolean): Promise<string> {
+    async fillRegisterForm(customerData: CustomerData, submit: boolean): Promise<string> {
         try {
             await this.customerForm.waitFor({ state: 'visible' });
 
