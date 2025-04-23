@@ -10,7 +10,7 @@ import { BillPayPage } from 'src/pages/billPay.page';
 import { UpdateInfoPage } from 'src/pages/updateInfo.page';
 import { RequestLoanPage } from 'src/pages/requestLoan.page';
 
-type PageObjects = {
+interface PageObjects {
     basePage: BasePage;
     homePage: HomePage;
     registerPage: RegisterPage;

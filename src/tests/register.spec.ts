@@ -15,7 +15,7 @@ const fields: Array<{ tag: string, testId: string, errorId: string }> = [
     { tag: 'Password confirmation', testId: 'repeatedPassword', errorId: 'repeatedPassword.errors' }
 ];
 
-test.describe('Register page tests', { tag: ['@register'] }, () => {
+test.describe('Register page', { tag: ['@register'] }, () => {
     test('should be able to register a new customer successfully', async ({ registerPage }) => {
         const username: string = await registerPage.fillRegisterForm(customerData, true);
         

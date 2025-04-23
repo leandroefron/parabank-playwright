@@ -56,14 +56,14 @@ export default defineConfig({
             dependencies: ['init-setup']
         },
         {
-            name: 'e2e_logged_in',
+            name: 'e2e-tests',
             use: { storageState: STORAGE_STATE },
             testDir: './src/tests',
             testMatch: ['userInfo.spec.ts', 'accounts.spec.ts', 'openNewAccount.spec.ts', 'billPay.spec.ts', 'transferFunds.spec.ts', 'requestLoan.spec.ts'],
             dependencies: ['create-customer']
         },
         {
-            name: 'e2e',
+            name: 'e2e-tests',
             testDir: './src/tests',
             testMatch: ['login.spec.ts', 'register.spec.ts'],
             dependencies: ['create-customer']
