@@ -18,22 +18,27 @@ export class AccountOverviewPage {
     async getBalanceFromAccount(accountNumber: string): Promise<string | null> {
         await this.accountTable.waitFor({ state: 'visible' });
         // Locate the row containing the account number
-        const row: Locator = this.accountTable
+        const accountRow: Locator = this.accountTable
             .locator('tr')
             .filter({
                 has: this.page.locator(`td:nth-child(1) a:has-text("${accountNumber}")`)
             })
             .first();
 
-        // Check if the row exists
-        if ((await row.count()) === 0) {
-            return null; // Account number not found
+        if ((await accountRow.count()) === 0) {
+            console.warn(`Account not found: ${accountNumber}`);
+            return null;
         }
 
         // Get the text content of the second cell in the row
-        const balance: string = await row.locator('td:nth-child(2)').textContent();
+        const balanceText: string = await accountRow.locator('td:nth-child(2)').textContent();
 
-        return balance?.replace('$', '').trim() || null;
+        if (!balanceText) {
+            console.error(`Could not retrieve balance for account: ${accountNumber}`);
+            return null;
+          }
+
+          return balanceText.replace(/\$/, '').trim() || null;
     }
 
     async getAccountsQty(): Promise<number> {
