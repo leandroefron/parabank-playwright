@@ -1,6 +1,6 @@
-import { BillPayData, UserRegisterData } from 'src/types';
+import { BillPayData, CustomerRegisterData } from 'src/types';
 
-export const customerData: UserRegisterData = {
+export const customerData: CustomerRegisterData = {
     firstName: 'Peter',
     lastName: 'Smith',
     address: '1234 Main St',

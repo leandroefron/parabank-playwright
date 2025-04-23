@@ -21,7 +21,7 @@ parabank-playwright/
 │   ├── constants/               # → URLs, messages, titles
 │   ├── data/                    # → External test data (JSON, CSV, etc.)
 │   ├── fixtures/                # → Reusable test setup/teardown logic
-│   ├── pages/                   # → Page Object Model classes (LoginPage, HomePage, etc.)
+│   ├── pages/                   # → Page Object Model classes (LoginPage, RequestLoan, etc.)
 │   ├── tests/                   # → Actual test specs
 │   ├── types/                   # → TypeScript interfaces & types
 │   └── util/                    # → Helper functions
@@ -100,8 +100,8 @@ Test reports are generated locally. You can view the report in one of the follow
 - Run `npm run reports`
 
 ## 🛠 Project Features
-- **User Registration:** Automates the process of registering a new user.
-- **Login and Logout:** Validates user login and logout functionality.
+- **Customer Registration:** Automates the process of registering a new customer.
+- **Login and Logout:** Validates customer login and logout functionality.
 - **Account Management:** Tests account creation and overview.
 - **Fund Transfers:** Verifies fund transfer between accounts.
 - **Bill Payments:** Automates bill payment functionality.

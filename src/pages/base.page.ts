@@ -6,49 +6,49 @@ import { Sidebar } from './components/sidebar';
 
 export class BasePage {
     readonly page: Page;
-    private _header: Header;
-    private _footer: Footer;
-    private _top: Top;
-    private _sidebar: Sidebar;
-    // private _rightPanel: RightPanel;
+    readonly header: Header;
+    readonly footer: Footer;
+    readonly top: Top;
+    readonly sidebar: Sidebar;
+    // private _header: Header;
+    // private _footer: Footer;
+    // private _top: Top;
+    // private _sidebar: Sidebar;
 
     constructor(page: Page) {
         this.page = page;
+        this.header = new Header(page);
+        this.footer = new Footer(page);
+        this.top = new Top(page);
+        this.sidebar = new Sidebar(page);
     }
 
-    get header(): Header {
-        if (!this._header) {
-            this._header = new Header(this.page);
-        }
-        return this._header;
-    }
-
-    get footer(): Footer {
-        if (!this._footer) {
-            this._footer = new Footer(this.page);
-        }
-        return this._footer;
-    }
-
-    get top(): Top {
-        if (!this._top) {
-            this._top = new Top(this.page);
-        }
-        return this._top;
-    }
-
-    get sidebar(): Sidebar {
-        if (!this._sidebar) {
-            this._sidebar = new Sidebar(this.page);
-        }
-        return this._sidebar;
-    }
-
-    // get rightPanel(): RightPanel {
-    //     if (!this._rightPanel) {
-    //         this._rightPanel = new RightPanel(this.page);
+    // get header(): Header {
+    //     if (!this._header) {
+    //         this._header = new Header(this.page);
     //     }
-    //     return this._rightPanel;
+    //     return this._header;
+    // }
+
+    // get footer(): Footer {
+    //     if (!this._footer) {
+    //         this._footer = new Footer(this.page);
+    //     }
+    //     return this._footer;
+    // }
+
+    // get top(): Top {
+    //     if (!this._top) {
+    //         this._top = new Top(this.page);
+    //     }
+    //     return this._top;
+    // }
+
+    // get sidebar(): Sidebar {
+    //     if (!this._sidebar) {
+    //         this._sidebar = new Sidebar(this.page);
+    //     }
+    //     return this._sidebar;
     // }
 
     get rightPanelContainer() {

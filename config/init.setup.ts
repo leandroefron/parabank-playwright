@@ -2,12 +2,32 @@ import { test as setup } from '../src/fixtures/custom.fixture';
 import * as api from 'src/util/api';
 import { INITIAL_BALANCE, MINIMUM_BALANCE } from 'src/constants';
 
-setup('Setup db', async () => {
-    await api.cleanDatabase();
-    await api.initializeDatabase();
+async function setAppParameters() {
+    const parameters: { key: string, value: string }[] = [
+        { key: 'initialBalance', value: INITIAL_BALANCE },
+        { key: 'minimumBalance', value: MINIMUM_BALANCE }
+    ];
+
+    for (const param of parameters) {
+        await api.setParameter(param.key, param.value);
+    }
+}
+
+setup('Setup database', async () => {
+    try {
+        await api.cleanDatabase();
+        await api.initializeDatabase();
+    } catch (error) {
+        console.error('Error during database setup:', error);
+        throw error;
+    }
 });
 
-setup('Setting parameters', async () => {
-        await api.setParameter('initialBalance', INITIAL_BALANCE);
-        await api.setParameter('minimumBalance', MINIMUM_BALANCE);
+setup('Set application parameters', async () => {
+    try {
+        await setAppParameters();
+    } catch (error) {
+        console.error('Error while setting application parameters:', error);
+        throw error;
+    }
 });

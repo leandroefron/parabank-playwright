@@ -47,7 +47,7 @@ export class RequestLoanPage extends BasePage {
     }
 
     async goto(): Promise<void> {
-        await super.goto(URL.REQUEST_LOAN);
+        await super.goto(URL.LOANS);
     }
 
     async applyForALoan(loanAmount: number, downPayment: number): Promise<string | null> {

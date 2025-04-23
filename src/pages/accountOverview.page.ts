@@ -1,7 +1,11 @@
 import { Page, Locator } from '@playwright/test';
 
 export class AccountOverviewPage {
-    constructor(private page: Page) {}
+    readonly page: Page;
+
+    constructor(page: Page) {
+        this.page = page;
+    }
 
     get overview(): Locator {
         return this.page.getByTestId('showOverview');

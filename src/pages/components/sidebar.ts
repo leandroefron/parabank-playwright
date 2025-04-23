@@ -71,7 +71,7 @@ export class Sidebar {
         if (isLoggedIn) {
             await this.logOutLnk.click();
         } else {
-            throw new Error('User is not logged in, cannot log out.');
+            throw new Error('Customer is not logged in, cannot log out.');
         }
     }
 

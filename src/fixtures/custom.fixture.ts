@@ -55,9 +55,11 @@ export const test = base.extend<PageObjects>({
     },
 
     accountOverviewPage: async ({ page }, use) => {
-        const accountOverviewPage = new AccountOverviewPage(page);
-        await accountOverviewPage.overview.waitFor({ state: 'visible' });
-        await use(accountOverviewPage);
+        // const accountOverviewPage = new AccountOverviewPage(page);
+        // await accountOverviewPage.goto();
+        // await accountOverviewPage.overview.waitFor({ state: 'visible' });
+        // await use(accountOverviewPage);
+        await use(new AccountOverviewPage(page));
     },
 
     transferFundsPage: async ({ page }, use) => {

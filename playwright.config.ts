@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test';
 import path from 'path';
 import dotenv from 'dotenv';
 
-export const STORAGE_STATE = path.join(__dirname, 'playwright/.auth/user.json');
+export const STORAGE_STATE: string = path.join(__dirname, 'playwright/.auth/customer.json');
 
 dotenv.config();
 
@@ -69,6 +69,4 @@ export default defineConfig({
             dependencies: ['create-customer']
         }
     ],
-    // Use grep to filter tests by tags
-    grep: process.env.TEST_TAG ? new RegExp(process.env.TEST_TAG) : undefined
 });

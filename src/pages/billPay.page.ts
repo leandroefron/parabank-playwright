@@ -61,7 +61,7 @@ export class BillPayPage extends BasePage {
     }
 
     async goto(): Promise<void> {
-        await super.goto(URL.BILL_PAY);
+        await super.goto(URL.BILLS);
     }
 
     async fillBillPayForm(billPayData: BillPayData, submit: boolean): Promise<void> {

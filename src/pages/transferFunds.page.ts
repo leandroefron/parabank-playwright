@@ -37,7 +37,7 @@ export class TransferFundsPage extends BasePage {
     }
 
     async goto(): Promise<void> {
-        await super.goto(URL.TRANSFER_FUNDS);
+        await super.goto(URL.TRANSFERS);
     }
 
     async transferFunds(amount: string | number, fromAccount: string, toAccount: string): Promise<void> {

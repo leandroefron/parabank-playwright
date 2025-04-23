@@ -1,23 +1,24 @@
 import { test, expect } from '../fixtures/custom.fixture';
 import { customerData } from 'src/data';
-import { URL, TITLES } from 'src/constants';
+import { URL } from 'src/constants';
+
 const username: string = process.env.CUSTOMER_USERNAME;
 
 test.describe('Login page tests', { tag: ['@login'] }, () => {
-    test('should be able to login with a valid user', async ({ basePage, homePage, accountOverviewPage }) => {
+    test('should be able to login with a valid user', async ({ basePage, accountOverviewPage, page }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
-
-        expect.soft(homePage.sidebar.welcomeMsg).toHaveText(`Welcome ${customerData.firstName} ${customerData.lastName}`);
+        
+        expect.soft(basePage.sidebar.welcomeMsg).toHaveText(`Welcome ${customerData.firstName} ${customerData.lastName}`);
 
         const accountsQty: number = await accountOverviewPage.getAccountsQty();
         expect(accountsQty).toBeGreaterThan(0);
     });
 
-    test('should be able to log out a user', async ({ basePage, homePage, page }) => {
+    test('should be able to log out an user', async ({ basePage, homePage, page }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
         await homePage.sidebar.logOutUser();
 
-        expect(homePage.sidebar.title).toHaveText(TITLES.CUSTOMER_LOGIN);
-        expect(page.url()).toContain(URL.LANDING);
+        await expect(basePage.sidebar.loginPanel).toBeVisible();
+        expect(page.url()).toContain(URL.BASE);
     });
 });

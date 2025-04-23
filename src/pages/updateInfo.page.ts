@@ -46,7 +46,7 @@ export class UpdateInfoPage extends BasePage {
     }
 
     async goto(): Promise<void> {
-        await super.goto(URL.UPDATE_INFO);
+        await super.goto(URL.PROFILE);
     }
 
     async updateFields(fieldsToUpdate: { [key: string]: string }): Promise<void> {
