@@ -11,9 +11,9 @@ const updatedProfileData: CustomerData = {
 
 export function validateUpdatedProfileData<T extends Record<string, any>>(expected: Partial<T>, actual: T): void {
     for (const [key, value] of Object.entries(expected)) {
-      expect(actual[key], `Mismatch on field "${key}"`).toBe(value);
+        expect(actual[key], `Mismatch on field "${key}"`).toBe(value);
     }
-  }
+}
 
 test.describe('Customer info tests', { tag: ['@customers'] }, () => {
     test('should update customer contact info successfully', async ({ updateInfoPage }) => {

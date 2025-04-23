@@ -7,8 +7,8 @@ const username: string = process.env.CUSTOMER_USERNAME;
 test.describe('Login page', { tag: ['@login'] }, () => {
     test('should be able to login with a valid user', async ({ basePage, accountOverviewPage }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
-        
-        const completeName: string = `${customerData.firstName} ${customerData.lastName}`
+
+        const completeName: string = `${customerData.firstName} ${customerData.lastName}`;
         expect.soft(basePage.sidebar.welcomeMsg).toHaveText(`Welcome ${completeName}`);
 
         const accountsQty: number = await accountOverviewPage.getAccountsQty();

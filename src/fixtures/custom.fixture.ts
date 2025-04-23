@@ -20,7 +20,7 @@ interface PageObjects {
     billPayPage: BillPayPage;
     updateInfoPage: UpdateInfoPage;
     requestLoanPage: RequestLoanPage;
-};
+}
 
 export const test = base.extend<PageObjects>({
     basePage: async ({ page }, use) => {
@@ -91,4 +91,4 @@ export const test = base.extend<PageObjects>({
     }
 });
 
-export { expect, Page, Locator } from '@playwright/test';
+export { expect, Page, Locator, BrowserContext, chromium } from '@playwright/test';

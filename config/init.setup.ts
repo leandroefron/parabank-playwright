@@ -3,7 +3,7 @@ import * as api from 'src/util/api';
 import { INITIAL_BALANCE, MINIMUM_BALANCE } from 'src/constants';
 
 async function setAppParameters() {
-    const parameters: { key: string, value: string }[] = [
+    const parameters: { key: string; value: string }[] = [
         { key: 'initialBalance', value: INITIAL_BALANCE },
         { key: 'minimumBalance', value: MINIMUM_BALANCE }
     ];

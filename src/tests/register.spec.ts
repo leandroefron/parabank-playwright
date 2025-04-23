@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures/custom.fixture';
 import { customerData } from 'src/data';
 import { MESSAGES } from 'src/constants';
 
-const fields: Array<{ tag: string, testId: string, errorId: string }> = [
+const fields: Array<{ tag: string; testId: string; errorId: string }> = [
     { tag: 'First name', testId: 'customer.firstName', errorId: 'customer.firstName.errors' },
     { tag: 'Last name', testId: 'customer.lastName', errorId: 'customer.lastName.errors' },
     { tag: 'Address', testId: 'customer.address.street', errorId: 'customer.address.street.errors' },

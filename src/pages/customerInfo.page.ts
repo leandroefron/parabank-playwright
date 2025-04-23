@@ -1,7 +1,7 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 import { URL } from 'src/constants';
-import { CustomerData } from 'src/types/index'
+import { CustomerData } from 'src/types/index';
 
 export class UpdateInfoPage extends BasePage {
     constructor(page: Page) {
@@ -66,7 +66,7 @@ export class UpdateInfoPage extends BasePage {
             if (!input) {
                 throw new Error(`Field "${field}" is not recognized.`);
             }
-    
+
             const isEditable: boolean = await input.isEditable();
             if (!isEditable) {
                 throw new Error(`Field "${field}" is not editable.`);
@@ -77,5 +77,4 @@ export class UpdateInfoPage extends BasePage {
 
         await this.updateBtn.click();
     }
-
 }

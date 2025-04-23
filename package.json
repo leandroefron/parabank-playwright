@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "docker:build": "docker build -t playwright-tests .",
-    "docker:run": "docker run -it --rm -v $PWD/reports:/app/reports playwright-tests",
+    "docker:run": "docker run -it --rm -v $PWD/reports:/app/reports -e RUN_ENV=docker playwright-tests",
     "test:docker": "npm run docker:build && npm run docker:run",
-    "test:local": "npx playwright test",
+    "test:local": "RUN_ENV=local npx playwright test",
     "reports": "npx playwright show-report reports",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write ."

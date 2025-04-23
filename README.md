@@ -2,7 +2,8 @@
 
 This project contains end-to-end tests for [Parabank](https://parabank.parasoft.com/parabank/index.htm) using [Playwright](https://playwright.dev/). You can run the tests either locally or inside a Docker container.
 
-## 📂 Project Structure 
+## 📂 Project Structure
+
 ```bash
 parabank-playwright/
 │
@@ -40,11 +41,13 @@ parabank-playwright/
 ## ✅ Prerequisites
 
 ### For Local Runs:
+
 - [Node.js](https://nodejs.org/en/) (v18+ recommended)
 - [npm](https://www.npmjs.com/)
 - [Playwright](https://playwright.dev/) (see setup below)
 
 ### For Docker Runs:
+
 - [Docker](https://www.docker.com/) installed and running
 
 ## ⚙️ Setup
@@ -57,6 +60,7 @@ cd parabank-playwright
 ```
 
 ### 2. Install Dependencies (Local)
+
 ```bash
 npm install
 npx playwright install
@@ -65,16 +69,21 @@ npx playwright install
 ## 🧪 Run Tests
 
 ### 💻 Run Locally
+
 Run all tests:
+
 ```bash
 npm run test:local
 ```
 
 Run a specific test by tag:
+
 ```bash
 npm run test:tag --grep @[tag]
 ```
+
 Possibles tags:
+
 - login
 - register
 - customers
@@ -84,7 +93,9 @@ Possibles tags:
 - transfers
 
 ---
-### 🐳 Run in Docker 
+
+### 🐳 Run in Docker
+
 This method ensures environment consistency with no local setup needed.
 Running this command will build the Docker image and then run the tests inside the Docker container.
 
@@ -100,6 +111,7 @@ Test reports are generated locally. You can view the report in one of the follow
 - Run `npm run reports`
 
 ## 🛠 Project Features
+
 - **Customer Registration:** Automates the process of registering a new customer.
 - **Login and Logout:** Validates customer login and logout functionality.
 - **Account Management:** Tests account creation and overview.
@@ -107,9 +119,10 @@ Test reports are generated locally. You can view the report in one of the follow
 - **Bill Payments:** Automates bill payment functionality.
 - **Loan Requests:** Tests loan application and approval/denial scenarios.
 
-
 ## 🎯 Formatting
+
 To maintain consistent code style across the project, run following scripts:
+
 - **`prettier:check`**: Check code formatting using Prettier.
 - **`prettier:fix`**: Automatically fix code formatting issues using Prettier.
 

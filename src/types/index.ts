@@ -11,7 +11,7 @@ export interface CustomerData {
     username?: string;
     password?: string;
     confirmPassword?: string;
-};
+}
 
 export interface BillPayData {
     payeeName: string;
@@ -23,17 +23,17 @@ export interface BillPayData {
     account: string;
     verifyAccount: string;
     amount: string;
-};
+}
 
 export interface AccountData {
     id: string;
     customerId: string;
     type: string;
     balance: string;
-};
+}
 
 export interface CreateAccountData {
     customerId: string;
     newAccountType: string;
     fromAccountId: string;
-};
+}

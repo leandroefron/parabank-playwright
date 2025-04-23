@@ -39,17 +39,16 @@ export class OpenNewAccountPage extends BasePage {
         // Select the account type and the first available account
         await this.typeAccountSelect.selectOption(type);
         await this.fromAccountSelect.selectOption({ index: 0 });
-    
+
         await this.openAccountBtn.click();
-    
+
         await this.openAccountResult.waitFor({ state: 'visible' });
         const accountNumber: string = await this.newAccountNumber.textContent();
-    
+
         if (!accountNumber) {
             throw new Error('Failed to retrieve the new account number.');
         }
 
         return accountNumber.trim();
     }
-
 }

@@ -92,14 +92,14 @@ export async function getBalanceFromAccount(accountId: string): Promise<number> 
 
 export function mapCustomerData(data: any): CustomerData {
     return {
-        id: data.id ?? '', 
-        firstName: data.firstName ?? '', 
+        id: data.id ?? '',
+        firstName: data.firstName ?? '',
         lastName: data.lastName ?? '',
-        address: data.address.street ?? '', 
+        address: data.address.street ?? '',
         city: data.address.city ?? '',
         state: data.address.state ?? '',
         zipCode: data.address.zipCode ?? '',
-        phoneNumber: data.phoneNumber ?? '', 
+        phoneNumber: data.phoneNumber ?? '',
         ssn: data.ssn ?? ''
     };
 }

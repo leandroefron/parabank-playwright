@@ -23,8 +23,8 @@ test.describe('Transfer funds tests', { tag: ['@transfers'] }, () => {
 
         await expect(transferFundsPage.resultTitle).toHaveText(TITLES.TRANSFER_COMPLETE);
         expect(transferFundsPage.resultMessage).toHaveText(`$${TRANSFER_AMOUNT} has been transferred from account #${fromAccountId} to account #${destinationAccountId}.`);
-        
-        const accountData : AccountData = await api.getAccountById(destinationAccountId);
+
+        const accountData: AccountData = await api.getAccountById(destinationAccountId);
         const expectedBalance: number = Number(MINIMUM_BALANCE) + Number(TRANSFER_AMOUNT);
 
         // Assert that the destination account's balance matches the expected balance

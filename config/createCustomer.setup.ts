@@ -1,7 +1,6 @@
-import { test as setup } from '../src/fixtures/custom.fixture';
+import { test as setup, BrowserContext, chromium } from '../src/fixtures/custom.fixture';
 import { RegisterPage } from 'src/pages/register.page';
 import { customerData } from 'src/data';
-import { BrowserContext, chromium } from '@playwright/test';
 import { STORAGE_STATE } from '../playwright.config';
 import { setCustomerEnvVars } from 'src/util/helpers';
 

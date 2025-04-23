@@ -27,7 +27,6 @@ export default defineConfig({
         ['html', { open: 'never', outputFolder: 'reports' }],
         ['list', { printSteps: true }]
     ],
-
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         baseURL: 'https://parabank.parasoft.com',
@@ -42,7 +41,7 @@ export default defineConfig({
         // Takes a screenshot on failure
         screenshot: 'only-on-failure'
     },
-
+    globalSetup: require.resolve('./config/global.setup.ts'),
     projects: [
         {
             name: 'init-setup',
@@ -57,16 +56,16 @@ export default defineConfig({
         },
         {
             name: 'e2e-tests',
-            use: { storageState: STORAGE_STATE },
-            testDir: './src/tests',
-            testMatch: ['customerInfo.spec.ts', 'accounts.spec.ts', 'openNewAccount.spec.ts', 'billPay.spec.ts', 'transferFunds.spec.ts', 'requestLoan.spec.ts'],
-            dependencies: ['create-customer']
-        },
-        {
-            name: 'e2e-tests',
             testDir: './src/tests',
             testMatch: ['login.spec.ts', 'register.spec.ts'],
             dependencies: ['create-customer']
+        },
+        {
+            name: 'e2e-tests-logged-in',
+            use: { storageState: STORAGE_STATE },
+            testDir: './src/tests',
+            testMatch: ['customerInfo.spec.ts', 'accounts.spec.ts', 'openNewAccount.spec.ts', 'billPay.spec.ts', 'transferFunds.spec.ts', 'requestLoan.spec.ts'],
+            dependencies: ['e2e-tests']
         }
-    ],
+    ]
 });

@@ -36,9 +36,9 @@ export class AccountOverviewPage {
         if (!balanceText) {
             console.error(`Could not retrieve balance for account: ${accountNumber}`);
             return null;
-          }
+        }
 
-          return balanceText.replace(/\$/, '').trim() || null;
+        return balanceText.replace(/\$/, '').trim() || null;
     }
 
     async getAccountsQty(): Promise<number> {
