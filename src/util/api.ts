@@ -1,14 +1,13 @@
 import { APIRequestContext, APIResponse, expect } from '@playwright/test';
 import { createApiContext, mapCustomerData } from './helpers';
-import { AccountData, CreateAccountData, CustomerData } from 'src/types';
+import { AccountData, CreateAccountData, CustomerData, TxData } from 'src/types';
 
-const baseURL = `${process.env.BASE_URL}${process.env.SERVICES_URL}`;
+const url: string = `${process.env.BASE_URL}${process.env.SERVICES_ENDPOINT}`;
 
 export async function cleanDatabase(): Promise<void> {
     try {
-        const baseURL = `${process.env.BASE_URL}${process.env.SERVICES_URL}`;
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.post(`${baseURL}/cleanDB`, {
+        const response: APIResponse = await apiContext.post(`${url}/cleanDB`, {
             data: ''
         });
 
@@ -20,9 +19,8 @@ export async function cleanDatabase(): Promise<void> {
 
 export async function initializeDatabase(): Promise<void> {
     try {
-        const baseURL = `${process.env.BASE_URL}${process.env.SERVICES_URL}`;
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.post(`${baseURL}/initializeDB`, {
+        const response: APIResponse = await apiContext.post(`${url}/initializeDB`, {
             data: ''
         });
 
@@ -35,7 +33,7 @@ export async function initializeDatabase(): Promise<void> {
 export async function getCustomerId(username: string, password: string): Promise<string> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.get(`${baseURL}/login/${username}/${password}`);
+        const response: APIResponse = await apiContext.get(`${url}/login/${username}/${password}`);
 
         expect(response.status()).toBe(200);
 
@@ -51,7 +49,7 @@ export async function getCustomerId(username: string, password: string): Promise
 export async function getCustomerDetails(customerId: string): Promise<CustomerData> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.get(`${baseURL}/customers/${customerId}`);
+        const response: APIResponse = await apiContext.get(`${url}/customers/${customerId}`);
 
         expect(response.status()).toBe(200);
 
@@ -67,7 +65,7 @@ export async function getCustomerDetails(customerId: string): Promise<CustomerDa
 export async function getCustomerAccounts(customerId: string): Promise<AccountData[]> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.get(`${baseURL}/customers/${customerId}/accounts`);
+        const response: APIResponse = await apiContext.get(`${url}/customers/${customerId}/accounts`);
 
         expect(response.status()).toBe(200);
 
@@ -85,7 +83,7 @@ export async function createAccount(data: CreateAccountData): Promise<string> {
 
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.post(`${baseURL}/createAccount?${qs}`, {
+        const response: APIResponse = await apiContext.post(`${url}/createAccount?${qs}`, {
             data: ''
         });
 
@@ -102,7 +100,7 @@ export async function createAccount(data: CreateAccountData): Promise<string> {
 export async function getAccountById(accountId: string): Promise<AccountData> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.get(`${baseURL}/accounts/${accountId}`);
+        const response: APIResponse = await apiContext.get(`${url}/accounts/${accountId}`);
 
         expect(response.status()).toBe(200);
 
@@ -117,12 +115,27 @@ export async function getAccountById(accountId: string): Promise<AccountData> {
 export async function setParameter(name: string, value: string): Promise<void> {
     try {
         const apiContext: APIRequestContext = await createApiContext();
-        const response: APIResponse = await apiContext.post(`${baseURL}/setParameter/${name}/${value}`, {
+        const response: APIResponse = await apiContext.post(`${url}/setParameter/${name}/${value}`, {
             data: ''
         });
 
         expect(response.status()).toBe(204);
     } catch (error) {
         throw new Error('Error cleaning database: ' + error);
+    }
+}
+
+export async function getTxsByAccount(accountId: string): Promise<TxData[]> {
+    try {
+        const apiContext: APIRequestContext = await createApiContext();
+        const response: APIResponse = await apiContext.get(`${url}/accounts/${accountId}/transactions`);
+
+        expect(response.status()).toBe(200);
+
+        const body: TxData[] = await response.json();
+
+        return body;
+    } catch (error) {
+        throw new Error('Getting account: ' + error);
     }
 }

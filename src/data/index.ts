@@ -1,4 +1,5 @@
 import { BillPayData, CustomerData } from 'src/types';
+import { BILL_PAY_AMOUNT } from 'src/constants';
 
 export const customerData: CustomerData = {
     firstName: 'Peter',
@@ -17,13 +18,13 @@ export const customerData: CustomerData = {
 };
 
 export const billPayData: BillPayData = {
-    payeeName: `${customerData.firstName} ${customerData.lastName}`,
-    address: customerData.address,
-    city: customerData.city,
-    state: customerData.state,
-    zipCode: customerData.zipCode,
-    phoneNumber: customerData.phoneNumber,
-    account: '222555',
-    verifyAccount: '222555',
-    amount: '50'
+    payeeName: 'John Biller',
+    address: '5678 First St',
+    city: 'Dallas',
+    state: 'Texas',
+    zipCode: '67889',
+    phoneNumber: '222-555-1234',
+    account: '4444',
+    verifyAccount: '4444',
+    amount: BILL_PAY_AMOUNT
 };

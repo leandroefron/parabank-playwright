@@ -1,6 +1,7 @@
 export const INITIAL_BALANCE = '1000.00';
 export const MINIMUM_BALANCE = '100.00';
 export const TRANSFER_AMOUNT = '50.00';
+export const BILL_PAY_AMOUNT = 50.00;
 
 export const URL = {
     REGISTER: '/parabank/register.htm',
@@ -26,6 +27,6 @@ export const MESSAGES = {
 export const TITLES = {
     CUSTOMER_LOGIN: 'Customer Login',
     ACCOUNT_OPENED: 'Account Opened!',
-    BILL_PAYMENT_COMP: 'Bill Payment Complete',
+    BILL_PAY_COMPLETE: 'Bill Payment Complete',
     TRANSFER_COMPLETE: 'Transfer Complete!'
 };

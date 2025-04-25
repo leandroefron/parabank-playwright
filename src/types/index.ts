@@ -22,7 +22,7 @@ export interface BillPayData {
     phoneNumber: string;
     account: string;
     verifyAccount: string;
-    amount: string;
+    amount: number;
 }
 
 export interface AccountData {
@@ -36,4 +36,20 @@ export interface CreateAccountData {
     customerId: string;
     newAccountType: string;
     fromAccountId: string;
+}
+
+export interface TxData {
+    id: number;
+    accountId: string;
+    type: string;
+    date: string;
+    amount: number;
+    description: string;
+}
+
+export interface TxRowData {
+    date: string;
+    transaction: string;
+    debit: string;
+    credit: string;
 }

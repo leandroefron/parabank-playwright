@@ -105,6 +105,14 @@ export class RegisterPage extends BasePage {
         return this.customerForm.locator('input[type="submit"]');
     }
 
+    get welcomeTitle(): Locator {
+        return this.rightPanelContainer.locator('h1');
+    }
+
+    get welcomeMessage(): Locator {
+        return this.rightPanelContainer.locator('p');
+    }
+
     async goto(): Promise<void> {
         await super.goto(URL.REGISTER);
     }
@@ -144,7 +152,7 @@ export class RegisterPage extends BasePage {
 
             if (submit) {
                 await this.submitBtn.click();
-                await this.title.waitFor({ state: 'visible' });
+                await this.welcomeTitle.waitFor({ state: 'visible' });
             }
 
             return customerData.username;

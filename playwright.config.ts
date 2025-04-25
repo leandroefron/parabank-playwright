@@ -29,7 +29,8 @@ export default defineConfig({
     ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
-        baseURL: 'https://parabank.parasoft.com',
+        // baseURL: 'https://parabank.parasoft.com',
+        baseURL: 'http://localhost:8080/parabank',
 
         actionTimeout: 1000,
         trace: 'on-first-retry',
@@ -64,8 +65,9 @@ export default defineConfig({
             name: 'e2e-tests-logged-in',
             use: { storageState: STORAGE_STATE },
             testDir: './src/tests',
-            testMatch: ['customerInfo.spec.ts', 'accounts.spec.ts', 'openNewAccount.spec.ts', 'billPay.spec.ts', 'transferFunds.spec.ts', 'requestLoan.spec.ts'],
-            dependencies: ['e2e-tests']
+            testMatch: ['accounts.spec.ts', 'billPay.spec.ts', 'customerInfo.spec.ts', 'requestLoan.spec.ts', 'transactions.spec.ts', 'transferFunds.spec.ts'],
+            dependencies: ['create-customer']
+            // dependencies: ['e2e-tests']
         }
     ]
 });

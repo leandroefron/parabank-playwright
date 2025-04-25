@@ -1,13 +1,10 @@
-import path from 'path';
-import { Locator, Page } from '@playwright/test';
+import { Locator } from '@playwright/test';
 import { APIRequestContext, request } from '@playwright/test';
 import * as api from './api';
-import { AccountData } from 'src/types';
+import { AccountData, TxData } from 'src/types';
 import { CustomerData } from 'src/types';
-export const authFile = 'playwright/.auth/user.json';
 
-const ROOT_DIR = process.cwd();
-const TMP_FILE = path.join(ROOT_DIR, 'tmp/user.json');
+export const authFile = 'playwright/.auth/user.json';
 
 export async function getRandomUsername(prefix: string = 'testuser', length: number = 8): Promise<string> {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -20,7 +17,7 @@ export async function createApiContext(): Promise<APIRequestContext> {
     const apiContext: APIRequestContext = await request.newContext({
         extraHTTPHeaders: {
             accept: 'application/json',
-            'Content-Type': 'application/json' // Add this line to set the Content-Type header
+            'Content-Type': 'application/json'
         }
     });
 
@@ -34,11 +31,6 @@ export async function setCustomerEnvVars(customerUserName: string, password: str
     const accountData: AccountData[] = await api.getCustomerAccounts(process.env.CUSTOMER_ID);
     process.env.CUSTOMER_DEFAULT_ACCOUNT = accountData[0].id;
 }
-
-// export async function saveUser(username: string): Promise<void> {
-//     fs.mkdirSync(path.dirname(TMP_FILE), { recursive: true });
-//     fs.writeFileSync(TMP_FILE, JSON.stringify({ username }, null, 2));
-// }
 
 /**
  * Selects an option from a dropdown by its value.
@@ -102,4 +94,56 @@ export function mapCustomerData(data: any): CustomerData {
         phoneNumber: data.phoneNumber ?? '',
         ssn: data.ssn ?? ''
     };
+}
+
+// export async function getTransactionId(accountId: string, date: string, amount: string, description: string): Promise<string | null> {
+//     try {
+//         // Fetch account data using the API
+//         const transactions: TxData[] = await api.getTxsByAccount(accountId);
+
+//         for (const txn of transactions) {
+//             console.log('Transaction:', txn);
+//             if (
+//               txn.accountId === accountId &&
+//               txn.date === date &&
+//               txn.amount === amount
+//             //   txn.description === description
+//             ) {
+//               return txn.id;
+//             }
+//           }
+
+//         return null;
+//     } catch (error) {
+//         throw new Error(`Failed to retrieve balance for account "${accountId}": ${error}`);
+//     }
+// }
+
+export async function getTransactionId(accountId: string, type: string, amount: number, description?: string): Promise<string | null> {
+    try {
+        // Fetch transactions for the given account
+        const transactions: TxData[] = await api.getTxsByAccount(accountId);
+
+        // Find the transaction that matches the criteria
+        const matchingTransaction: TxData = transactions.find(txn => {
+            const matchesType: boolean = txn.type === type;
+            const matchesAmount: boolean = txn.amount === amount;
+            const matchesDescription: boolean = description ? txn.description === description : true;
+
+            return matchesType && matchesAmount && matchesDescription;
+        });
+
+        if (matchingTransaction) {
+            return matchingTransaction.id.toString();
+        }
+
+        return null;
+    } catch (error) {
+        console.error(`Error retrieving transaction ID for account "${accountId}":`, error);
+        throw new Error(`Failed to retrieve transaction ID: ${error.message}`);
+    }
+}
+
+export function normalizeAmount(amount: number | string): string {
+    return parseFloat(amount.toString()).toFixed(2);
 }

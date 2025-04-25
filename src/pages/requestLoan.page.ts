@@ -1,5 +1,5 @@
 import { BasePage } from './base.page';
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { URL } from '../constants';
 
 export class RequestLoanPage extends BasePage {
@@ -13,6 +13,10 @@ export class RequestLoanPage extends BasePage {
 
     get requestLoanResult(): Locator {
         return this.page.getByTestId('requestLoanResult');
+    }
+
+    get requestLoanError(): Locator {
+        return this.page.getByTestId('requestLoanError');
     }
 
     get loanRequestDeniedMsg(): Locator {
@@ -42,6 +46,7 @@ export class RequestLoanPage extends BasePage {
     get loanStatus(): Locator {
         return this.requestLoanResult.getByTestId('loanStatus');
     }
+
     get submitBtn(): Locator {
         return this.requestLoanForm.locator('input[value="Apply Now"]');
     }
@@ -50,20 +55,21 @@ export class RequestLoanPage extends BasePage {
         await super.goto(URL.LOANS);
     }
 
-    async applyForALoan(loanAmount: number, downPayment: number): Promise<string | null> {
+    async applyForALoan(loanAmount: number, downPayment: number): Promise<string | string[] | null> {
         try {
             await this.fillLoanForm(loanAmount, downPayment);
-
             await this.submitBtn.click();
 
-            await this.loanStatus.waitFor({ state: 'visible' });
+            const result: string[] = await this.getResult();
+
+            // await this.loanStatus.waitFor({ state: 'visible' });
 
             // Check if a new account ID is visible and return it
             if (await this.newAccountId.isVisible()) {
                 return (await this.newAccountId.innerText()).trim();
             }
 
-            return null;
+            return result;
         } catch (error) {
             console.error('Error applying for a loan:', error);
             throw new Error(`Failed to apply for a loan: ${error.message}`);

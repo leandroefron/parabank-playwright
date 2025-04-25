@@ -1,78 +1,72 @@
 import { Page, Locator } from '@playwright/test';
-import { Header } from './components/header';
-import { Footer } from './components/footer';
-import { Top } from './components/top';
 import { Sidebar } from './components/sidebar';
 
 export class BasePage {
     readonly page: Page;
-    readonly header: Header;
-    readonly footer: Footer;
-    readonly top: Top;
     readonly sidebar: Sidebar;
-    // private _header: Header;
-    // private _footer: Footer;
-    // private _top: Top;
-    // private _sidebar: Sidebar;
 
     constructor(page: Page) {
         this.page = page;
-        this.header = new Header(page);
-        this.footer = new Footer(page);
-        this.top = new Top(page);
         this.sidebar = new Sidebar(page);
     }
-
-    // get header(): Header {
-    //     if (!this._header) {
-    //         this._header = new Header(this.page);
-    //     }
-    //     return this._header;
-    // }
-
-    // get footer(): Footer {
-    //     if (!this._footer) {
-    //         this._footer = new Footer(this.page);
-    //     }
-    //     return this._footer;
-    // }
-
-    // get top(): Top {
-    //     if (!this._top) {
-    //         this._top = new Top(this.page);
-    //     }
-    //     return this._top;
-    // }
-
-    // get sidebar(): Sidebar {
-    //     if (!this._sidebar) {
-    //         this._sidebar = new Sidebar(this.page);
-    //     }
-    //     return this._sidebar;
-    // }
 
     get rightPanelContainer() {
         return this.page.getByTestId('rightPanel');
     }
 
+    // get title(): Locator {
+    //     // Locate all <h1> elements inside the #rightPanel and filter for visible ones
+    //     return this.rightPanelContainer
+    //         .locator('div').locator('div')
+    //         .filter({
+    //             hasNot: this.page.locator('[style*="display: none;"]')
+    //         })
+    //         .first();
+    // }
+
     get title(): Locator {
-        // Locate all <h1> elements inside the #rightPanel and filter for visible ones
+        // Locate all <div> elements inside the #rightPanel and filter for those without "display: none;"
         return this.rightPanelContainer
-            .locator('h1')
+            .locator('div div') // Select nested <div> elements
             .filter({
-                hasNot: this.page.locator('[style*="display: none;"]')
+                hasNot: this.page.locator('[style*="display: none;"]') // Exclude elements with "display: none;"
             })
-            .first();
+            .first(); // Get the first matching visible <div>
     }
 
-    async goto(url: string = '/'): Promise<void> {
+    async goto(url: string = '/parabank'): Promise<void> {
         await this.page.goto(url);
     }
 
+    async getResult2() {
+        const sel = (await this.rightPanelContainer.locator('div').locator('div[style=""]').first().innerText()).trim();
+
+        console.log('Sel:', sel);
+    }
+
+    async getResult(): Promise<string[]> {
+        const items = this.rightPanelContainer.locator('div div');
+        const visibleDiv = items.filter({
+            has: this.page.locator('[style=""]')
+        });
+
+        // Wait for the element to be visible
+        await visibleDiv.waitFor({ state: 'visible' });
+
+        // Get the inner text of the visible <div>
+        const title: string = (await visibleDiv.locator('h1').innerText()).trim();
+        const message: string = await visibleDiv.locator('p').first().innerText();
+        // console.log('title:', title);
+        // console.log('message:', message);
+
+        return [title, message];
+    }
+
     async getVisibleContent(): Promise<{ title: string | null; messages: Locator }> {
-        // Locate the first visible <div> inside the container
+        // Locate the first visible <div> inside the container+
+        this.page.pause();
         const visibleDiv = this.rightPanelContainer
-            .locator('div')
+            .locator('div div')
             .filter({
                 hasNot: this.page.locator('[style*="display: none;"]')
             })
@@ -86,7 +80,8 @@ export class BasePage {
         // Get all <p> elements inside the same visible <div>
         const messages = await visibleDiv.locator('div > p').first();
 
-        console.log('messages; ', await messages.innerText());
+        // console.log('messages; ', await messages.innerText());
+        console.log('title; ', title);
         return {
             title: title?.trim() || null,
             messages: messages
@@ -95,5 +90,40 @@ export class BasePage {
 
     get bodyMessage() {
         return this.rightPanelContainer.locator('p');
+    }
+
+    async getDisplayedContent() {
+        const rightPanelSelector = '#rightPanel';
+        await this.page.pause();
+        // Evaluate the DOM to find the visible content dynamically
+        const content = await this.page.$eval(rightPanelSelector, rightPanel => {
+            const visibleDiv = Array.from(rightPanel.children).find(child => {
+                const style = window.getComputedStyle(child);
+                return style.display !== 'none';
+            });
+
+            if (!visibleDiv) {
+                return null;
+            }
+
+            // Extract h1 and p elements from the visible div
+            const h1 = visibleDiv.querySelector('h1')?.textContent?.trim() || null;
+            const paragraphs = Array.from(visibleDiv.querySelectorAll('p')).map(p => p.textContent?.trim());
+
+            console.log('h1:', h1);
+            // console.log('paragraphs:', paragraphs);
+
+            return {
+                h1,
+                paragraphs
+            };
+        });
+
+        if (!content) {
+            console.error('No visible content found in #rightPanel');
+            return null;
+        }
+
+        return content;
     }
 }

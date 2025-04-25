@@ -7,6 +7,7 @@ import { OpenNewAccountPage } from 'src/pages/openNewAccount.page';
 import { AccountOverviewPage } from 'src/pages/accountOverview.page';
 import { TransferFundsPage } from 'src/pages/transferFunds.page';
 import { BillPayPage } from 'src/pages/billPay.page';
+import { TransactionsPage } from 'src/pages/transactions.page';
 import { UpdateInfoPage } from 'src/pages/customerInfo.page';
 import { RequestLoanPage } from 'src/pages/requestLoan.page';
 
@@ -18,6 +19,7 @@ interface PageObjects {
     accountOverviewPage: AccountOverviewPage;
     transferFundsPage: TransferFundsPage;
     billPayPage: BillPayPage;
+    transactionsPage: TransactionsPage;
     updateInfoPage: UpdateInfoPage;
     requestLoanPage: RequestLoanPage;
 }
@@ -74,6 +76,13 @@ export const test = base.extend<PageObjects>({
         await billPayPage.goto();
         await billPayPage.billPayForm.waitFor({ state: 'visible' });
         await use(billPayPage);
+    },
+
+    transactionsPage: async ({ page }, use) => {
+        const transactionsPage = new TransactionsPage(page);
+        await transactionsPage.goto();
+        await transactionsPage.transactionForm.waitFor({ state: 'visible' });
+        await use(transactionsPage);
     },
 
     updateInfoPage: async ({ page }, use) => {

@@ -13,13 +13,13 @@ test.describe.serial('Request Loan tests', { tag: ['@loans'] }, () => {
         const loanAmount: number = availableBalance - 1;
         const downPayment: number = availableBalance - 1;
 
-        const newAccountId: string | null = await requestLoanPage.applyForALoan(loanAmount, downPayment);
+        const result: string | string[] = await requestLoanPage.applyForALoan(loanAmount, downPayment);
 
-        if (typeof newAccountId === 'string') {
-            const balance: number = await getBalanceFromAccount(newAccountId);
+        if (typeof result === 'string') {
+            const balance: number = await getBalanceFromAccount(result);
             expect(balance).toBe(loanAmount);
         } else {
-            throw new Error('Failed to retrieve a valid account ID.');
+            expect(typeof result === 'string', `${(result[0], result[1])}`).toBeTruthy();
         }
     });
 

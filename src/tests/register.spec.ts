@@ -19,8 +19,8 @@ test.describe('Register page', { tag: ['@register'] }, () => {
     test('should be able to register a new customer successfully', async ({ registerPage }) => {
         const username: string = await registerPage.fillRegisterForm(customerData, true);
 
-        await expect(registerPage.title).toHaveText(`Welcome ${username}`);
-        await expect(registerPage.bodyMessage).toHaveText(MESSAGES.ACCOUNT_CREATED);
+        await expect(registerPage.welcomeTitle).toHaveText(`Welcome ${username}`);
+        await expect(registerPage.welcomeMessage).toHaveText(MESSAGES.ACCOUNT_CREATED);
     });
 
     fields.forEach(({ tag, testId, errorId }) => {
@@ -32,10 +32,10 @@ test.describe('Register page', { tag: ['@register'] }, () => {
 
             await registerPage.submitBtn.click();
 
-            const errorMessage: string = await registerPage.page.getByTestId(errorId).textContent();
-            const expectedErrorMessage: string = MESSAGES.VALIDATION_ERROR.replace('{field}', tag);
+            const errorMsg: string = await registerPage.page.getByTestId(errorId).textContent();
+            const expectedErrorMsg: string = MESSAGES.VALIDATION_ERROR.replace('{field}', tag);
 
-            expect(errorMessage).toBe(expectedErrorMessage);
+            expect(errorMsg).toBe(expectedErrorMsg);
         });
     });
 });

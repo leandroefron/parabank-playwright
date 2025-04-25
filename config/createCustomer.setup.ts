@@ -17,7 +17,7 @@ setup('Creating new customer', async () => {
         await setCustomerEnvVars(username, customerData.password);
 
         await page.context().storageState({ path: STORAGE_STATE });
-        console.log('✅ Customer created successfully:', username);
+        console.log('    ✅ Customer created successfully:', username);
 
         await context.close();
         await browser.close();

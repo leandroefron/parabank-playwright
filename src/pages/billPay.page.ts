@@ -16,6 +16,14 @@ export class BillPayPage extends BasePage {
         return this.page.getByTestId('billpayResult');
     }
 
+    get resultTitle(): Locator {
+        return this.billPayResult.locator('h1');
+    }
+
+    get resultMessage(): Locator {
+        return this.billPayResult.locator('p').first();
+    }
+
     get payeeNameInput(): Locator {
         return this.page.locator('input[name="payee.name"]');
     }
@@ -44,10 +52,6 @@ export class BillPayPage extends BasePage {
         return this.page.locator('input[name="payee.accountNumber"]');
     }
 
-    get fromAccountSelect(): Locator {
-        return this.page.locator('select[name="fromAccountId"]');
-    }
-
     get verifyAccountInput(): Locator {
         return this.page.locator('input[name="verifyAccount"]');
     }
@@ -56,20 +60,27 @@ export class BillPayPage extends BasePage {
         return this.page.locator('input[name="amount"]');
     }
 
-    get sendPaymentBtn(): Locator {
+    get submitBtn(): Locator {
         return this.billPayForm.locator('input[value="Send Payment"]');
+    }
+
+    get fromAccountIdSelect(): Locator {
+        return this.billPayForm.locator('select[name="fromAccountId"]');
+    }
+
+    get fromAccountId(): Locator {
+        return this.billPayResult.getByTestId('fromAccountId');
     }
 
     async goto(): Promise<void> {
         await super.goto(URL.BILLS);
     }
 
-    async fillBillPayForm(billPayData: BillPayData, submit: boolean): Promise<void> {
+    async fillBillPayForm(billPayData: BillPayData, submit: boolean, fieldToOmit?: string): Promise<string | null> {
         try {
             await this.billPayForm.waitFor({ state: 'visible' });
 
-            // Map of input fields to their corresponding data
-            const fieldMap = {
+            const fieldMap: { [K in keyof BillPayData]: Locator } = {
                 payeeName: this.payeeNameInput,
                 address: this.addressInput,
                 city: this.cityInput,
@@ -81,20 +92,24 @@ export class BillPayPage extends BasePage {
                 amount: this.amountInput
             };
 
-            // Fill each field dynamically
             for (const [key, input] of Object.entries(fieldMap)) {
-                if (billPayData[key]) {
-                    await input.fill(billPayData[key]);
+                if (key !== fieldToOmit && billPayData[key as keyof BillPayData]) {
+                    await input.fill(String(billPayData[key as keyof BillPayData]));
                 }
             }
 
-            await this.fromAccountSelect.selectOption({ index: 0 });
+            // await this.fromAccountIdSelect.selectOption({ index: 0 });
+            await this.fromAccountIdSelect.selectOption({ label: process.env.CUSTOMER_DEFAULT_ACCOUNT });
 
-            if (submit) {
-                await this.sendPaymentBtn.click();
+            if (submit && !fieldToOmit) {
+                await this.submitBtn.click();
+                await this.billPayResult.waitFor({ state: 'visible' });
+                const accountId: string = await this.fromAccountId.textContent();
+
+                return accountId;
             }
 
-            await this.billPayResult.waitFor({ state: 'visible' });
+            return null;
         } catch (error) {
             console.error('Error filling the bill pay form: ', error);
             throw error;
