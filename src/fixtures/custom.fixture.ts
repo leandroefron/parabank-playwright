@@ -3,7 +3,7 @@ import { test as base } from '@playwright/test';
 import { BasePage } from 'src/pages/base.page';
 import { HomePage } from 'src/pages/home.page';
 import { RegisterPage } from 'src/pages/register.page';
-import { OpenNewAccountPage } from 'src/pages/openNewAccount.page';
+import { OpenNewAccountPage } from 'src/pages/openAccount.page';
 import { AccountOverviewPage } from 'src/pages/accountOverview.page';
 import { TransferFundsPage } from 'src/pages/transferFunds.page';
 import { BillPayPage } from 'src/pages/billPay.page';
@@ -58,9 +58,6 @@ export const test = base.extend<PageObjects>({
 
     accountOverviewPage: async ({ page }, use) => {
         const accountOverviewPage = new AccountOverviewPage(page);
-        // await accountOverviewPage.goto();
-        // await accountOverviewPage.overview.waitFor({ state: 'visible' });
-        // await use(accountOverviewPage);
         await use(accountOverviewPage);
     },
 

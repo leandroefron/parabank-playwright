@@ -1,34 +1,51 @@
-import { Locator } from '@playwright/test';
-import { APIRequestContext, request } from '@playwright/test';
+import { APIRequestContext, Locator, request } from '@playwright/test';
+import { AccountData, TxData, CustomerData } from 'src/types';
 import * as api from './api';
-import { AccountData, TxData } from 'src/types';
-import { CustomerData } from 'src/types';
 
 export const authFile = 'playwright/.auth/user.json';
 
+/**
+ * Generates a random username with a given prefix and length.
+ *
+ * @param prefix - The prefix for the username.
+ * @param length - The length of the random suffix.
+ * @returns A randomly generated username.
+ */
 export async function getRandomUsername(prefix: string = 'testuser', length: number = 8): Promise<string> {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const randomSuffix: string = Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
 
-    return Promise.resolve(`${prefix}_${randomSuffix}`);
+    return `${prefix}_${randomSuffix}`;
 }
 
+/**
+ * Creates a new API request context with default headers.
+ *
+ * @returns A Playwright APIRequestContext instance.
+ */
 export async function createApiContext(): Promise<APIRequestContext> {
-    const apiContext: APIRequestContext = await request.newContext({
+    return request.newContext({
         extraHTTPHeaders: {
             accept: 'application/json',
             'Content-Type': 'application/json'
         }
     });
-
-    return apiContext;
 }
 
+/**
+ * Sets customer-related environment variables.
+ *
+ * @param customerUserName - The customer's username.
+ * @param password - The customer's password.
+ */
 export async function setCustomerEnvVars(customerUserName: string, password: string): Promise<void> {
     process.env.CUSTOMER_USERNAME = customerUserName;
     process.env.CUSTOMER_ID = await api.getCustomerId(customerUserName, password);
 
     const accountData: AccountData[] = await api.getCustomerAccounts(process.env.CUSTOMER_ID);
+    if (accountData.length === 0) {
+        throw new Error(`No accounts found for the customer id: ${process.env.CUSTOMER_ID}`);
+    }
     process.env.CUSTOMER_DEFAULT_ACCOUNT = accountData[0].id;
 }
 
@@ -37,20 +54,19 @@ export async function setCustomerEnvVars(customerUserName: string, password: str
  *
  * @param locator - The Playwright Locator for the dropdown element.
  * @param value - The value attribute of the option to select.
- * @throws Error if the dropdown is not visible or the value cannot be selected.
  */
 export async function selectDropdownByValue(locator: Locator, value: string | number): Promise<void> {
     await locator.waitFor({ state: 'visible' });
 
-    const isEnabled: boolean = await locator.isEnabled();
-    if (!isEnabled) {
+    if (!(await locator.isEnabled())) {
         throw new Error('Dropdown is not enabled.');
     }
 
-    const valueStr: string = typeof value === 'number' ? value.toString() : value;
+    const valueStr: string = value.toString();
 
     try {
-        await locator.selectOption({ value: valueStr });
+        // await locator.selectOption({ value: 'valueStr' });
+        await locator.selectOption(valueStr );
     } catch (error) {
         throw new Error(`Failed to select the option with value "${value}": ${error}`);
     }
@@ -61,27 +77,28 @@ export async function selectDropdownByValue(locator: Locator, value: string | nu
  *
  * @param accountId - The ID of the account to retrieve the balance for.
  * @returns The balance of the account as a number.
- * @throws Error if the account data cannot be retrieved or the balance is invalid.
  */
 export async function getBalanceFromAccount(accountId: string): Promise<number> {
     try {
-        // Fetch account data using the API
         const accountData: AccountData = await api.getAccountById(accountId);
+        const balance: number = parseFloat(accountData.balance);
 
-        // Parse the balance as a number
-        const balance: number = Number(accountData.balance);
-
-        // Validate the parsed balance
         if (isNaN(balance)) {
             throw new Error(`Invalid balance value for account "${accountId}": ${accountData.balance}`);
         }
 
         return balance;
     } catch (error) {
-        throw new Error(`Failed to retrieve balance for account "${accountId}": ${error}`);
+        throw new Error(`Failed to retrieve balance for account "${accountId}": ${error.message}`);
     }
 }
 
+/**
+ * Maps raw customer data to a strongly typed CustomerData object.
+ *
+ * @param data - The raw customer data.
+ * @returns A mapped CustomerData object.
+ */
 export function mapCustomerData(data: any): CustomerData {
     return {
         id: data.id ?? '',
@@ -96,35 +113,19 @@ export function mapCustomerData(data: any): CustomerData {
     };
 }
 
-// export async function getTransactionId(accountId: string, date: string, amount: string, description: string): Promise<string | null> {
-//     try {
-//         // Fetch account data using the API
-//         const transactions: TxData[] = await api.getTxsByAccount(accountId);
-
-//         for (const txn of transactions) {
-//             console.log('Transaction:', txn);
-//             if (
-//               txn.accountId === accountId &&
-//               txn.date === date &&
-//               txn.amount === amount
-//             //   txn.description === description
-//             ) {
-//               return txn.id;
-//             }
-//           }
-
-//         return null;
-//     } catch (error) {
-//         throw new Error(`Failed to retrieve balance for account "${accountId}": ${error}`);
-//     }
-// }
-
+/**
+ * Retrieves the transaction ID for a specific transaction.
+ *
+ * @param accountId - The ID of the account.
+ * @param type - The type of the transaction (e.g., Debit, Credit).
+ * @param amount - The amount of the transaction.
+ * @param description - The description of the transaction (optional).
+ * @returns The transaction ID as a string, or null if not found.
+ */
 export async function getTransactionId(accountId: string, type: string, amount: number, description?: string): Promise<string | null> {
     try {
-        // Fetch transactions for the given account
         const transactions: TxData[] = await api.getTxsByAccount(accountId);
 
-        // Find the transaction that matches the criteria
         const matchingTransaction: TxData = transactions.find(txn => {
             const matchesType: boolean = txn.type === type;
             const matchesAmount: boolean = txn.amount === amount;
@@ -133,17 +134,18 @@ export async function getTransactionId(accountId: string, type: string, amount: 
             return matchesType && matchesAmount && matchesDescription;
         });
 
-        if (matchingTransaction) {
-            return matchingTransaction.id.toString();
-        }
-
-        return null;
+        return matchingTransaction ? matchingTransaction.id.toString() : null;
     } catch (error) {
-        console.error(`Error retrieving transaction ID for account "${accountId}":`, error);
-        throw new Error(`Failed to retrieve transaction ID: ${error.message}`);
+        throw new Error(`Failed to retrieve transaction ID for account "${accountId}": ${error.message}`);
     }
 }
 
+/**
+ * Normalizes an amount to a string with two decimal places.
+ *
+ * @param amount - The amount to normalize.
+ * @returns The normalized amount as a string.
+ */
 export function normalizeAmount(amount: number | string): string {
     return parseFloat(amount.toString()).toFixed(2);
 }

@@ -2,6 +2,7 @@ import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 import { URL } from '../constants';
 import { BillPayData } from 'src/types';
+import { selectDropdownByValue } from 'src/util/helpers';
 
 export class BillPayPage extends BasePage {
     constructor(page: Page) {
@@ -73,7 +74,7 @@ export class BillPayPage extends BasePage {
     }
 
     async goto(): Promise<void> {
-        await super.goto(URL.BILLS);
+        await super.goto(URL.BILL_PAY);
     }
 
     async fillBillPayForm(billPayData: BillPayData, submit: boolean, fieldToOmit?: string): Promise<string | null> {
@@ -98,8 +99,7 @@ export class BillPayPage extends BasePage {
                 }
             }
 
-            // await this.fromAccountIdSelect.selectOption({ index: 0 });
-            await this.fromAccountIdSelect.selectOption({ label: process.env.CUSTOMER_DEFAULT_ACCOUNT });
+            await selectDropdownByValue(this.fromAccountIdSelect, process.env.CUSTOMER_DEFAULT_ACCOUNT);
 
             if (submit && !fieldToOmit) {
                 await this.submitBtn.click();

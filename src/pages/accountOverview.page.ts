@@ -31,14 +31,14 @@ export class AccountOverviewPage {
         }
 
         // Get the text content of the second cell in the row
-        const balanceText: string = await accountRow.locator('td:nth-child(2)').textContent();
+        const balanceAmount: string = await accountRow.locator('td:nth-child(2)').textContent();
 
-        if (!balanceText) {
+        if (!balanceAmount) {
             console.error(`Could not retrieve balance for account: ${accountNumber}`);
             return null;
         }
 
-        return balanceText.replace(/\$/, '').trim() || null;
+        return balanceAmount.replace(/\$/, '').trim() || null;
     }
 
     async getAccountsQty(): Promise<number> {

@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures/custom.fixture';
 import { customerData } from 'src/data';
 import { MESSAGES } from 'src/constants';
 
-const fields: Array<{ tag: string; testId: string; errorId: string }> = [
+const validationFields = [
     { tag: 'First name', testId: 'customer.firstName', errorId: 'customer.firstName.errors' },
     { tag: 'Last name', testId: 'customer.lastName', errorId: 'customer.lastName.errors' },
     { tag: 'Address', testId: 'customer.address.street', errorId: 'customer.address.street.errors' },
@@ -16,26 +16,36 @@ const fields: Array<{ tag: string; testId: string; errorId: string }> = [
 ];
 
 test.describe('Register page', { tag: ['@register'] }, () => {
-    test('should be able to register a new customer successfully', async ({ registerPage }) => {
+    test('should successfully register a new customer', async ({ registerPage }) => {
         const username: string = await registerPage.fillRegisterForm(customerData, true);
 
         await expect(registerPage.welcomeTitle).toHaveText(`Welcome ${username}`);
         await expect(registerPage.welcomeMessage).toHaveText(MESSAGES.ACCOUNT_CREATED);
     });
 
-    fields.forEach(({ tag, testId, errorId }) => {
+    validationFields.forEach(({ tag, testId, errorId }) => {
         test(`should show validation error when '${tag}' is empty`, async ({ registerPage }) => {
             await registerPage.fillRegisterForm(customerData, false);
 
             // Clear the specific field being tested
-            await registerPage.page.getByTestId(testId).fill('');
+            await clearField(registerPage, testId);
 
             await registerPage.submitBtn.click();
 
-            const errorMsg: string = await registerPage.page.getByTestId(errorId).textContent();
+            const errorMsg: string = await getErrorMessage(registerPage, errorId);
             const expectedErrorMsg: string = MESSAGES.VALIDATION_ERROR.replace('{field}', tag);
 
             expect(errorMsg).toBe(expectedErrorMsg);
         });
     });
 });
+
+// Helper function to clear a specific field
+async function clearField(registerPage, testId: string): Promise<void> {
+    await registerPage.page.getByTestId(testId).fill('');
+}
+
+// Helper function to retrieve the error message
+async function getErrorMessage(registerPage, errorId: string): Promise<string> {
+    return (await registerPage.page.getByTestId(errorId).textContent()).trim();
+}

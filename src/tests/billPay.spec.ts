@@ -4,7 +4,7 @@ import { getTransactionId, normalizeAmount } from 'src/util/helpers';
 import { BILL_PAY_AMOUNT, TITLES } from 'src/constants';
 import moment from 'moment';
 
-let tx = {
+const tx = {
     id: '',
     accountId: '',
     date: moment().format('MM-DD-YYYY'),
@@ -13,7 +13,7 @@ let tx = {
     amount: BILL_PAY_AMOUNT
 };
 
-const fields: Array<{ tag: string; errorId: string; expectedMsg: string }> = [
+const validationFields: Array<{ tag: string; errorId: string; expectedMsg: string }> = [
     { tag: 'payeeName', errorId: 'validationModel-name', expectedMsg: 'Payee name is required.' },
     { tag: 'address', errorId: 'validationModel-address', expectedMsg: 'Address is required.' },
     { tag: 'city', errorId: 'validationModel-city', expectedMsg: 'City is required.' },
@@ -26,40 +26,37 @@ const fields: Array<{ tag: string; errorId: string; expectedMsg: string }> = [
 ];
 
 test.describe.serial('Bill Pay tests', { tag: ['@billPay'] }, () => {
-    test('should be able to pay a bill', async ({ billPayPage }) => {
+    test('should successfully pay a bill', async ({ billPayPage }) => {
         tx.accountId = await billPayPage.fillBillPayForm(billPayData, true);
 
         tx.id = await getTransactionId(tx.accountId, tx.type, tx.amount, tx.description);
 
-        const expectedMsg = `Bill Payment to ${billPayData.payeeName} in the amount of $${normalizeAmount(BILL_PAY_AMOUNT)} from account ${process.env.CUSTOMER_DEFAULT_ACCOUNT} was successful.`
+        const expectedMsg = `Bill Payment to ${billPayData.payeeName} in the amount of $${normalizeAmount(BILL_PAY_AMOUNT)} from account ${process.env.CUSTOMER_DEFAULT_ACCOUNT} was successful.`;
 
         expect.soft(billPayPage.resultTitle).toHaveText(TITLES.BILL_PAY_COMPLETE);
         expect(billPayPage.resultMessage).toHaveText(expectedMsg);
     });
 
-    fields.forEach(({ tag, errorId, expectedMsg }) => {
+    validationFields.forEach(({ tag, errorId, expectedMsg }) => {
         test(`should show validation error when '${tag}' is empty`, async ({ billPayPage }) => {
             await billPayPage.fillBillPayForm(billPayData, false, tag);
 
             await billPayPage.submitBtn.click();
 
             const errorMsg: string = (await billPayPage.page.getByTestId(errorId).textContent()).trim();
-
             expect(errorMsg).toBe(expectedMsg);
         });
     });
 
-    test.skip('should be able to find by transaction ID', async ({ transactionsPage }) => {
+    test.skip('should find a transaction by ID', async ({ transactionsPage }) => {
         await transactionsPage.findByTransactionId(tx.accountId, tx.id);
-
         await transactionsPage.page.waitForTimeout(5000);
     });
 
-    test('should be able to find by transaction date', async ({ transactionsPage }) => {
+    test('should find a transaction by date', async ({ transactionsPage }) => {
         await transactionsPage.findByTransactionDate(tx.accountId, tx.date);
-        
-        const isPresent: boolean = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
 
+        const isPresent: boolean = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
         expect(isPresent).toBeTruthy();
 
         // Option 2: Only checks if are rows present.
@@ -67,11 +64,10 @@ test.describe.serial('Bill Pay tests', { tag: ['@billPay'] }, () => {
         // expect(rowsCount).toBeGreaterThan(0);
     });
 
-    test('should be able to find by transaction amount', async ({ transactionsPage }) => {
+    test('should find a transaction by amount', async ({ transactionsPage }) => {
         await transactionsPage.findByTransactionAmount(tx.accountId, tx.amount);
-        
-        const isPresent: boolean = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
 
+        const isPresent: boolean = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
         expect(isPresent).toBeTruthy();
     });
 });

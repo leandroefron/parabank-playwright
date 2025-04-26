@@ -1,6 +1,7 @@
 import { BasePage } from './base.page';
 import { expect, Locator, Page } from '@playwright/test';
 import { URL } from '../constants';
+import { selectDropdownByValue } from 'src/util/helpers';
 
 export class RequestLoanPage extends BasePage {
     constructor(page: Page) {
@@ -88,6 +89,6 @@ export class RequestLoanPage extends BasePage {
         if (!fromAccount) {
             throw new Error('Environment variable CUSTOMER_DEFAULT_ACCOUNT is not defined.');
         }
-        await this.fromAccountSelect.selectOption({ value: fromAccount });
+        await selectDropdownByValue(this.fromAccountSelect, fromAccount);
     }
 }

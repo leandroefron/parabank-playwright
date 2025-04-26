@@ -44,8 +44,6 @@ export class TransactionsPage extends BasePage {
         return this.page.getByTestId('transactionTable');
     }
 
-
-
     get txTableRows(): Locator {
         return this.txTable.getByTestId('transactionBody').locator('tr');
     }
@@ -82,35 +80,28 @@ export class TransactionsPage extends BasePage {
         return rowsCount;
     }
 
-    async findResults(
-        date: string,
-        description: string,
-        debitAmount?: number,
-        creditAmount?: number
-    ): Promise<boolean> {
+    async findResults(date: string, description: string, debitAmount?: number, creditAmount?: number): Promise<boolean> {
         await this.txTable.waitFor({ state: 'visible' });
-    
+
         const rows: Locator[] = await this.txTableRows.all();
-    
+
         for (const row of rows) {
             const cells: Locator[] = await row.locator('td').all();
-    
-            const [rowDate, rowDescription, rowDebitRaw, rowCreditRaw] = await Promise.all(
-                cells.map(cell => cell.textContent().then(text => text?.trim() || ''))
-            );
-    
+
+            const [rowDate, rowDescription, rowDebitRaw, rowCreditRaw] = await Promise.all(cells.map(cell => cell.textContent().then(text => text?.trim() || '')));
+
             const rowDebitAmount: string = rowDebitRaw.replace('$', '');
             const rowCreditAmount: string = rowCreditRaw.replace('$', '');
-    
+
             const matches: boolean =
                 rowDate === date &&
                 rowDescription === description &&
                 (!debitAmount || parseFloat(rowDebitAmount) === debitAmount) &&
                 (!creditAmount || parseFloat(rowCreditAmount) === creditAmount);
-    
+
             if (matches) return true;
         }
-    
+
         return false;
     }
 }
