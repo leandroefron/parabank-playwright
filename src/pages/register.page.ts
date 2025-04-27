@@ -1,104 +1,49 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
-import { URL } from '../constants';
 import { getRandomUsername } from 'src/util/helpers';
 import { CustomerData } from '../types/index';
+import { URL } from '../constants';
 
 export class RegisterPage extends BasePage {
     constructor(page: Page) {
         super(page);
     }
 
+    // Locators
     get customerForm(): Locator {
         return this.page.getByTestId('customerForm');
     }
 
-    get firstNameInput(): Locator {
-        return this.page.getByTestId('customer.firstName');
+    private get inputFields(): Record<string, Locator> {
+        return {
+            firstName: this.page.getByTestId('customer.firstName'),
+            lastName: this.page.getByTestId('customer.lastName'),
+            address: this.page.getByTestId('customer.address.street'),
+            city: this.page.getByTestId('customer.address.city'),
+            state: this.page.getByTestId('customer.address.state'),
+            zipCode: this.page.getByTestId('customer.address.zipCode'),
+            phoneNumber: this.page.getByTestId('customer.phoneNumber'),
+            ssn: this.page.getByTestId('customer.ssn'),
+            username: this.page.getByTestId('customer.username'),
+            password: this.page.getByTestId('customer.password'),
+            confirmPassword: this.page.getByTestId('repeatedPassword')
+        };
     }
 
-    get firstNameError(): Locator {
-        return this.page.getByTestId('customer.firstName.errors');
-    }
-
-    get lastNameInput(): Locator {
-        return this.page.getByTestId('customer.lastName');
-    }
-
-    get lastNameError(): Locator {
-        return this.page.getByTestId('customer.lastName.errors');
-    }
-
-    get addressInput(): Locator {
-        return this.page.getByTestId('customer.address.street');
-    }
-
-    get addressError(): Locator {
-        return this.page.getByTestId('customer.address.street.errors');
-    }
-
-    get cityInput(): Locator {
-        return this.page.getByTestId('customer.address.city');
-    }
-
-    get cityError(): Locator {
-        return this.page.getByTestId('customer.address.city.errors');
-    }
-
-    get stateInput(): Locator {
-        return this.page.getByTestId('customer.address.state');
-    }
-
-    get stateError(): Locator {
-        return this.page.getByTestId('customer.address.state.errors');
-    }
-
-    get zipCodeInput(): Locator {
-        return this.page.getByTestId('customer.address.zipCode');
-    }
-
-    get zipCodeError(): Locator {
-        return this.page.getByTestId('customer.address.zipCode.errors');
-    }
-
-    get phoneNumberInput(): Locator {
-        return this.page.getByTestId('customer.phoneNumber');
-    }
-
-    get phoneNumberError(): Locator {
-        return this.page.getByTestId('customer.phoneNumber.errors');
-    }
-
-    get ssnInput(): Locator {
-        return this.page.getByTestId('customer.ssn');
-    }
-
-    get ssnError(): Locator {
-        return this.page.getByTestId('customer.ssn.errors');
-    }
-
-    get usernameInput(): Locator {
-        return this.page.getByTestId('customer.username');
-    }
-
-    get usernameError(): Locator {
-        return this.page.getByTestId('customer.username.errors');
-    }
-
-    get passwordInput(): Locator {
-        return this.page.getByTestId('customer.password');
-    }
-
-    get passwordError(): Locator {
-        return this.page.getByTestId('customer.password.errors');
-    }
-
-    get confirmInput(): Locator {
-        return this.page.getByTestId('repeatedPassword');
-    }
-
-    get confirmError(): Locator {
-        return this.page.getByTestId('repeatedPassword.errors');
+    private get errorFields(): Record<string, Locator> {
+        return {
+            firstName: this.page.getByTestId('customer.firstName.errors'),
+            lastName: this.page.getByTestId('customer.lastName.errors'),
+            address: this.page.getByTestId('customer.address.street.errors'),
+            city: this.page.getByTestId('customer.address.city.errors'),
+            state: this.page.getByTestId('customer.address.state.errors'),
+            zipCode: this.page.getByTestId('customer.address.zipCode.errors'),
+            phoneNumber: this.page.getByTestId('customer.phoneNumber.errors'),
+            ssn: this.page.getByTestId('customer.ssn.errors'),
+            username: this.page.getByTestId('customer.username.errors'),
+            password: this.page.getByTestId('customer.password.errors'),
+            confirmPassword: this.page.getByTestId('repeatedPassword.errors')
+        };
     }
 
     get submitBtn(): Locator {
@@ -113,38 +58,27 @@ export class RegisterPage extends BasePage {
         return this.rightPanelContainer.locator('p');
     }
 
+    // Actions
     async goto(): Promise<void> {
         await super.goto(URL.REGISTER);
     }
 
+    /**
+     * Fill the registration form.
+     * @param customerData - Data for registration
+     * @param submit - Whether to submit the form
+     */
     async fillRegisterForm(customerData: CustomerData, submit: boolean): Promise<string> {
+        await this.customerForm.waitFor({ state: 'visible' });
+
         try {
-            await this.customerForm.waitFor({ state: 'visible' });
-
             // Generate a random username
-            customerData.username = await getRandomUsername();
-
             if (!customerData.username || customerData.username.trim() === '') {
-                throw new Error('Generated username is empty or invalid.');
+                customerData.username = await getRandomUsername();
             }
 
-            // Map of input fields to their corresponding data
-            const fieldMap = {
-                firstName: this.firstNameInput,
-                lastName: this.lastNameInput,
-                address: this.addressInput,
-                city: this.cityInput,
-                state: this.stateInput,
-                zipCode: this.zipCodeInput,
-                phoneNumber: this.phoneNumberInput,
-                ssn: this.ssnInput,
-                username: this.usernameInput,
-                password: this.passwordInput,
-                confirmPassword: this.confirmInput
-            };
-
             // Fill each field dynamically
-            for (const [key, input] of Object.entries(fieldMap)) {
+            for (const [key, input] of Object.entries(this.inputFields)) {
                 if (customerData[key]) {
                     await input.fill(customerData[key]);
                 }
@@ -157,8 +91,40 @@ export class RegisterPage extends BasePage {
 
             return customerData.username;
         } catch (error) {
-            console.error('Error filling the registration form: ', error);
-            throw error;
+            throw new Error(`Failed to fill the registration form: ${error.message}`);
         }
+    }
+
+    /**
+     * Fill a specific input field.
+     * @param field - Field name
+     * @param value - Value to fill
+     */
+    async fillInputField(field: string, value: string): Promise<void> {
+        const fieldLocator: Locator = this.inputFields[field];
+
+        if (!fieldLocator) {
+            throw new Error(`Field locator for "${field}" not found.`);
+        }
+
+        await fieldLocator.waitFor({ state: 'visible' });
+        await fieldLocator.fill(value);
+    }
+
+    /**
+     * Get an error message for a specific field.
+     * @param field - Field name
+     */
+    async getErrorMessage(field: string): Promise<string> {
+        const errorLocator: Locator = this.errorFields[field];
+
+        if (!errorLocator) {
+            throw new Error(`Error field locator for "${field}" not found.`);
+        }
+
+        await errorLocator.waitFor({ state: 'visible' });
+        const errorMessage: string = (await errorLocator.textContent()).trim();
+
+        return errorMessage;
     }
 }

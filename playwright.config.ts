@@ -65,7 +65,7 @@ export default defineConfig({
             name: 'e2e-tests-logged-in',
             use: { storageState: STORAGE_STATE },
             testDir: './src/tests',
-            testMatch: ['accounts.spec.ts', 'billPay.spec.ts', 'customerInfo.spec.ts', 'requestLoan.spec.ts', 'transactions.spec.ts', 'transferFunds.spec.ts'],
+            testMatch: ['billPay.spec.ts', 'customerInfo.spec.ts', 'openAccount.spec.ts', 'requestLoan.spec.ts', 'transactions.spec.ts', 'transferFunds.spec.ts'],
             dependencies: ['create-customer']
             // dependencies: ['e2e-tests']
         }

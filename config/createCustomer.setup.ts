@@ -22,6 +22,6 @@ setup('Creating new customer', async () => {
         await context.close();
         await browser.close();
     } catch (error) {
-        throw new Error(`Creating new customer \n${error}`);
+        throw new Error(`Creating new customer: ${error.message}`);
     }
 });

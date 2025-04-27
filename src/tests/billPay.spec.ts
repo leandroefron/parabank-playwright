@@ -25,7 +25,7 @@ const validationFields: Array<{ tag: string; errorId: string; expectedMsg: strin
     { tag: 'amount', errorId: 'validationModel-amount-empty', expectedMsg: 'The amount cannot be empty.' }
 ];
 
-test.describe.serial('Bill Pay tests', { tag: ['@billPay'] }, () => {
+test.describe.serial('Bill Pay tests @all', { tag: ['@billPay'] }, () => {
     test('should successfully pay a bill', async ({ billPayPage }) => {
         tx.accountId = await billPayPage.fillBillPayForm(billPayData, true);
 
@@ -58,10 +58,6 @@ test.describe.serial('Bill Pay tests', { tag: ['@billPay'] }, () => {
 
         const isPresent: boolean = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
         expect(isPresent).toBeTruthy();
-
-        // Option 2: Only checks if are rows present.
-        // const rowsCount: number = await transactionsPage.getTransactionRowsCount();
-        // expect(rowsCount).toBeGreaterThan(0);
     });
 
     test('should find a transaction by amount', async ({ transactionsPage }) => {

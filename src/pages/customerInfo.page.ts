@@ -12,69 +12,59 @@ export class UpdateInfoPage extends BasePage {
         return this.page.getByTestId('updateProfileForm');
     }
 
-    get firstNameInput(): Locator {
-        return this.page.getByTestId('customer.firstName');
+    private get inputFields(): Record<string, Locator> {
+        return {
+            firstName: this.page.getByTestId('customer.firstName'),
+            lastName: this.page.getByTestId('customer.lastName'),
+            address: this.page.getByTestId('customer.address.street'),
+            city: this.page.getByTestId('customer.address.city'),
+            state: this.page.getByTestId('customer.address.state'),
+            zipCode: this.page.getByTestId('customer.address.zipCode'),
+            phoneNumber: this.page.getByTestId('customer.phoneNumber')
+        };
     }
 
-    get lastNameInput(): Locator {
-        return this.page.getByTestId('customer.lastName');
-    }
-
-    get addressInput(): Locator {
-        return this.page.getByTestId('customer.address.street');
-    }
-
-    get cityInput(): Locator {
-        return this.page.getByTestId('customer.address.city');
-    }
-
-    get stateInput(): Locator {
-        return this.page.getByTestId('customer.address.state');
-    }
-
-    get zipCodeInput(): Locator {
-        return this.page.getByTestId('customer.address.zipCode');
-    }
-
-    get phoneNumberInput(): Locator {
-        return this.page.getByTestId('customer.phoneNumber');
-    }
-
-    get updateBtn(): Locator {
+    private get updateBtn(): Locator {
         return this.updateProfileForm.locator('input[value="Update Profile"]');
     }
 
+    // Actions
     async goto(): Promise<void> {
         await super.goto(URL.PROFILE);
     }
 
+    /**
+     * Fills and submits the update profile form.
+     *
+     * @param fieldsToUpdate - The fields to update with their new values.
+     */
     async fillAndSubmitUpdateForm(fieldsToUpdate: CustomerData): Promise<void> {
         await this.updateProfileForm.waitFor({ state: 'visible' });
 
-        const fieldMap = {
-            firstName: this.firstNameInput,
-            lastName: this.lastNameInput,
-            address: this.addressInput,
-            city: this.cityInput,
-            state: this.stateInput,
-            zipCode: this.zipCodeInput,
-            phoneNumber: this.phoneNumberInput
-        };
-
         for (const [field, value] of Object.entries(fieldsToUpdate)) {
-            const input: Locator = fieldMap[field];
+            const input = this.inputFields[field];
             if (!input) {
                 throw new Error(`Field "${field}" is not recognized.`);
             }
-
-            const isEditable: boolean = await input.isEditable();
-            if (!isEditable) {
-                throw new Error(`Field "${field}" is not editable.`);
-            }
-            await this.page.waitForTimeout(400);
-            await input.fill(value);
+            await this.fillInputField(input, field, value);
         }
 
         await this.updateBtn.click();
+    }
+
+    /**
+     * Fills a specific input field.
+     *
+     * @param input - The locator for the input field.
+     * @param field - The name of the field being updated.
+     * @param value - The value to fill in the field.
+     */
+    private async fillInputField(input: Locator, field: string, value: string): Promise<void> {
+        if (!input.isEditable()) {
+            throw new Error(`Field "${field}" is not editable.`);
+        }
+
+        await this.page.waitForTimeout(400);
+        await input.fill(value);
     }
 }

@@ -1,7 +1,7 @@
 import { BasePage } from './base.page';
 import { expect, Locator, Page } from '@playwright/test';
 import { URL } from '../constants';
-import { selectDropdownByValue } from 'src/util/helpers';
+import { selectDropdownByValue } from 'src/util/helpers';
 
 export class RequestLoanPage extends BasePage {
     constructor(page: Page) {

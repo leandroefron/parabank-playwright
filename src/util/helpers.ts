@@ -14,8 +14,13 @@ export const authFile = 'playwright/.auth/user.json';
 export async function getRandomUsername(prefix: string = 'testuser', length: number = 8): Promise<string> {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const randomSuffix: string = Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+    const username: string = `${prefix}${randomSuffix}`;
 
-    return `${prefix}_${randomSuffix}`;
+    if (!username.trim()) {
+        throw new Error('Generated username is empty or invalid.');
+    }
+
+    return username;
 }
 
 /**
@@ -66,7 +71,7 @@ export async function selectDropdownByValue(locator: Locator, value: string | nu
 
     try {
         // await locator.selectOption({ value: 'valueStr' });
-        await locator.selectOption(valueStr );
+        await locator.selectOption(valueStr);
     } catch (error) {
         throw new Error(`Failed to select the option with value "${value}": ${error}`);
     }

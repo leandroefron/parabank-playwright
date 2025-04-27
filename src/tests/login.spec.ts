@@ -4,8 +4,8 @@ import { URL } from 'src/constants';
 
 const username: string = process.env.CUSTOMER_USERNAME;
 
-test.describe('Login page', { tag: ['@login'] }, () => {
-    test('should be able to login with a valid user', async ({ basePage, accountOverviewPage }) => {
+test.describe('Login page @all', { tag: ['@login'] }, () => {
+    test('should login successfully with valid credentials', async ({ basePage, accountOverviewPage }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
 
         const completeName: string = `${customerData.firstName} ${customerData.lastName}`;
@@ -15,8 +15,9 @@ test.describe('Login page', { tag: ['@login'] }, () => {
         expect(accountsQty).toBeGreaterThan(0);
     });
 
-    test('should be able to log out an user', async ({ basePage, homePage, page }) => {
+    test('should log out successfully', async ({ basePage, homePage, page }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
+
         await homePage.sidebar.logOutUser();
 
         await expect(basePage.sidebar.loginPanel).toBeVisible();

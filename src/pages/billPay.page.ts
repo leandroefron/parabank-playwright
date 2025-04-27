@@ -9,11 +9,12 @@ export class BillPayPage extends BasePage {
         super(page);
     }
 
+    // Locators
     get billPayForm(): Locator {
         return this.page.getByTestId('billpayForm');
     }
 
-    get billPayResult(): Locator {
+    private get billPayResult(): Locator {
         return this.page.getByTestId('billpayResult');
     }
 
@@ -25,39 +26,39 @@ export class BillPayPage extends BasePage {
         return this.billPayResult.locator('p').first();
     }
 
-    get payeeNameInput(): Locator {
+    private get payeeNameInput(): Locator {
         return this.page.locator('input[name="payee.name"]');
     }
 
-    get addressInput(): Locator {
+    private get addressInput(): Locator {
         return this.page.locator('input[name="payee.address.street"]');
     }
 
-    get cityInput(): Locator {
+    private get cityInput(): Locator {
         return this.page.locator('input[name="payee.address.city"]');
     }
 
-    get stateInput(): Locator {
+    private get stateInput(): Locator {
         return this.page.locator('input[name="payee.address.state"]');
     }
 
-    get zipCodeInput(): Locator {
+    private get zipCodeInput(): Locator {
         return this.page.locator('input[name="payee.address.zipCode"]');
     }
 
-    get phoneInput(): Locator {
+    private get phoneInput(): Locator {
         return this.page.locator('input[name="payee.phoneNumber"]');
     }
 
-    get accountInput(): Locator {
+    private get accountInput(): Locator {
         return this.page.locator('input[name="payee.accountNumber"]');
     }
 
-    get verifyAccountInput(): Locator {
+    private get verifyAccountInput(): Locator {
         return this.page.locator('input[name="verifyAccount"]');
     }
 
-    get amountInput(): Locator {
+    private get amountInput(): Locator {
         return this.page.locator('input[name="amount"]');
     }
 
@@ -65,18 +66,26 @@ export class BillPayPage extends BasePage {
         return this.billPayForm.locator('input[value="Send Payment"]');
     }
 
-    get fromAccountIdSelect(): Locator {
+    private get fromAccountIdSelect(): Locator {
         return this.billPayForm.locator('select[name="fromAccountId"]');
     }
 
-    get fromAccountId(): Locator {
+    private get fromAccountIdResult(): Locator {
         return this.billPayResult.getByTestId('fromAccountId');
     }
 
+    // Actions
     async goto(): Promise<void> {
         await super.goto(URL.BILL_PAY);
     }
 
+    /**
+     * Fill and optionally submit the bill pay form.
+     *
+     * @param billPayData - Data to fill the form
+     * @param submit - Whether to submit the form after filling
+     * @param fieldToOmit - Optional field name to skip filling
+     */
     async fillBillPayForm(billPayData: BillPayData, submit: boolean, fieldToOmit?: string): Promise<string | null> {
         try {
             await this.billPayForm.waitFor({ state: 'visible' });
@@ -93,9 +102,9 @@ export class BillPayPage extends BasePage {
                 amount: this.amountInput
             };
 
-            for (const [key, input] of Object.entries(fieldMap)) {
-                if (key !== fieldToOmit && billPayData[key as keyof BillPayData]) {
-                    await input.fill(String(billPayData[key as keyof BillPayData]));
+            for (const [field, input] of Object.entries(fieldMap) as [keyof BillPayData, Locator][]) {
+                if (field !== fieldToOmit && billPayData[field] !== undefined) {
+                    await input.fill(String(billPayData[field]));
                 }
             }
 
@@ -104,15 +113,19 @@ export class BillPayPage extends BasePage {
             if (submit && !fieldToOmit) {
                 await this.submitBtn.click();
                 await this.billPayResult.waitFor({ state: 'visible' });
-                const accountId: string = await this.fromAccountId.textContent();
+
+                const accountId = (await this.fromAccountIdResult.textContent())?.trim();
+
+                if (!accountId) {
+                    throw new Error('Failed to retrieve the account ID after payment.');
+                }
 
                 return accountId;
             }
 
             return null;
         } catch (error) {
-            console.error('Error filling the bill pay form: ', error);
-            throw error;
+            throw new Error(`Failed to fill the bill pay form: ${error.message}`);
         }
     }
 }
