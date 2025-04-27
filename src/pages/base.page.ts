@@ -38,92 +38,120 @@ export class BasePage {
         await this.page.goto(url);
     }
 
-    async getResult2() {
-        const sel = (await this.rightPanelContainer.locator('div').locator('div[style=""]').first().innerText()).trim();
+    async getResultLocator(): Promise<Locator> {
+        const items = this.rightPanelContainer.locator(':scope > div > div');
 
-        console.log('Sel:', sel);
-    }
+        for (let i: number = 0; i < (await items.count()); i++) {
+            const item: Locator = items.nth(i);
+            const style: string = await item.getAttribute('style');
 
-    async getResult(): Promise<string[]> {
-        const items = this.rightPanelContainer.locator('div div');
-        const visibleDiv = items.filter({
-            has: this.page.locator('[style=""]')
-        });
-
-        // Wait for the element to be visible
-        await visibleDiv.waitFor({ state: 'visible' });
-
-        // Get the inner text of the visible <div>
-        const title: string = (await visibleDiv.locator('h1').innerText()).trim();
-        const message: string = await visibleDiv.locator('p').first().innerText();
-        // console.log('title:', title);
-        // console.log('message:', message);
-
-        return [title, message];
-    }
-
-    async getVisibleContent(): Promise<{ title: string | null; messages: Locator }> {
-        // Locate the first visible <div> inside the container+
-        this.page.pause();
-        const visibleDiv = this.rightPanelContainer
-            .locator('div div')
-            .filter({
-                hasNot: this.page.locator('[style*="display: none;"]')
-            })
-            .first();
-
-        // console.log('Visible div:', await visibleDiv.innerText());
-
-        // Get the visible <h1> inside the visible <div>
-        const title = await visibleDiv.locator('h1').first().textContent();
-
-        // Get all <p> elements inside the same visible <div>
-        const messages = await visibleDiv.locator('div > p').first();
-
-        // console.log('messages; ', await messages.innerText());
-        console.log('title; ', title);
-        return {
-            title: title?.trim() || null,
-            messages: messages
-        };
-    }
-
-    get bodyMessage() {
-        return this.rightPanelContainer.locator('p');
-    }
-
-    async getDisplayedContent() {
-        const rightPanelSelector = '#rightPanel';
-        await this.page.pause();
-        // Evaluate the DOM to find the visible content dynamically
-        const content = await this.page.$eval(rightPanelSelector, rightPanel => {
-            const visibleDiv = Array.from(rightPanel.children).find(child => {
-                const style = window.getComputedStyle(child);
-                return style.display !== 'none';
-            });
-
-            if (!visibleDiv) {
-                return null;
+            if (style === '' || style === null) {
+                return item;
             }
+        }
+    }
 
-            // Extract h1 and p elements from the visible div
-            const h1 = visibleDiv.querySelector('h1')?.textContent?.trim() || null;
-            const paragraphs = Array.from(visibleDiv.querySelectorAll('p')).map(p => p.textContent?.trim());
+    async getResultText(): Promise<string> {
+        const result: Locator = await this.getResultLocator();
 
-            console.log('h1:', h1);
-            // console.log('paragraphs:', paragraphs);
+        if (result.locator(':scope > p')) {
+            const title: string = await result.locator('h1').innerText();
+            const body: string = await result.locator('p').first().innerText();
+            const message = `${title} ${body}`;
 
-            return {
-                h1,
-                paragraphs
-            };
-        });
-
-        if (!content) {
-            console.error('No visible content found in #rightPanel');
-            return null;
+            return message;
         }
 
-        return content;
+        const title: string = (await result.locator('h1').textContent());
+
+        return title;
     }
+
+    // async getResult(): Promise<void> {
+    //     const items = this.rightPanelContainer.locator(':scope > div > div');
+
+    //     for (let i = 0; i < await items.count(); i++) {
+    //         const item = items.nth(i);
+    //         const style = await item.getAttribute('style');
+    //         console.log(`Item #${i} has style: '${style}'`);
+
+    //         if (style === '' || style === null) {
+    //             console.log(`Item #${i} has an empty style`);
+    //             console.log('Item content:', await item.locator('h1').innerText());
+    //             // console.log('Item content:', await item.innerText());
+    //         } else {
+    //             console.log(`Item #${i} has style: '${style}'`);
+    //         }
+    //     }
+
+    //     // const visibleDivs = this.rightPanelContainer.locator(':scope > div > div').filter({
+    //     //     hasNot: this.page.locator('[style*="display:none"]') // Exclude elements with "display:none"
+    //     // });
+
+    //     // console.log('Visible divs:', await visibleDivs.allInnerTexts());
+
+    //     // const visibleDiv = items.filter({
+    //     //     has: this.page.locator('[style=""]')
+    //     // });
+
+    //     // const emptyStyleDivs = this.rightPanelContainer.locator(':scope > div > div').filter({
+    //     //     has: this.page.locator('[style=""]')
+    //     // });
+
+    //     // console.log('Empty style divs:', await emptyStyleDivs.allInnerTexts());
+
+    //     // console.log('Visible div:', await visibleDiv.allInnerTexts());
+
+    //     //         const divs2 = await this.rightPanelContainer.locator(':scope > div > div'); // Select direct div children
+
+    //     // const count2 = await divs2.count();
+    //     // const eleg = await divs2.evaluateAll(divs => divs.filter(div => div.getAttribute('style') === ''));
+    //     // console.log('Eleg:', await eleg.allInnerTexts());
+    //     // console.log('Count2:', count2);
+    //     // console.log('Divs2:', await divs2.allInnerTexts());
+    //     // // const emptyStyleDivs = this.rightPanelContainer.locator(':scope > div > div').filter({
+    //     // //     predicate: async (el) => {
+    //     // //       const style = await el.getAttribute('style');
+    //     // //       return style === '';
+    //     // //     }
+    //     // //   });
+
+    //     // const emptyDivHandles = await this.rightPanelContainer.locator(':scope > div > div').evaluateAll(divs =>
+    //     //     divs.filter(div => div.getAttribute('style') === '')
+    //     //   );
+
+    //     //   console.log(`Found ${emptyDivHandles.length} div(s) with empty style.`);
+
+    //     //   console.log('Empty divs:', emptyDivHandles);
+
+    //     // const divs = await this.rightPanelContainer.locator(':scope > div');
+    //     // const count = await divs.count();
+
+    //     // for (let i = 0; i < count; i++) {
+    //     // const div = divs.nth(i);
+    //     // const style = await div.getAttribute('style');
+
+    //     // if (style === '' || style === null) {
+    //     //     console.log(`Div #${i} has an empty style`);
+    //     //     console.log('Div content:', await div.innerText());
+    //     // } else {
+    //     //     console.log(`Div #${i} has style: '${style}'`);
+
+    //     // }
+    //     // }
+
+    //     // console.log('Visible div:', await items.count());
+    //     // console.log(await visibleDiv.innerText())
+
+    //     // // Wait for the element to be visible
+    //     // await visibleDiv.waitFor({ state: 'visible' });
+
+    //     // // Get the inner text of the visible <div>
+    //     // const title: string = (await visibleDiv.locator('h1').innerText()).trim();
+    //     // const message: string = await visibleDiv.locator('p').first().innerText();
+    //     // // console.log('title:', title);
+    //     // // console.log('message:', message);
+
+    //     // return [title, message];
+    // }
 }

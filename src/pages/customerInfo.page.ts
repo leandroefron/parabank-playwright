@@ -42,7 +42,7 @@ export class UpdateInfoPage extends BasePage {
         await this.updateProfileForm.waitFor({ state: 'visible' });
 
         for (const [field, value] of Object.entries(fieldsToUpdate)) {
-            const input = this.inputFields[field];
+            const input: Locator = this.inputFields[field];
             if (!input) {
                 throw new Error(`Field "${field}" is not recognized.`);
             }
@@ -64,7 +64,7 @@ export class UpdateInfoPage extends BasePage {
             throw new Error(`Field "${field}" is not editable.`);
         }
 
-        await this.page.waitForTimeout(400);
+        await this.page.waitForTimeout(500);
         await input.fill(value);
     }
 }

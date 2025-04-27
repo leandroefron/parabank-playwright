@@ -14,7 +14,7 @@ export const authFile = 'playwright/.auth/user.json';
 export async function getRandomUsername(prefix: string = 'testuser', length: number = 8): Promise<string> {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const randomSuffix: string = Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
-    const username: string = `${prefix}${randomSuffix}`;
+    const username: string = `${prefix}_${randomSuffix}`;
 
     if (!username.trim()) {
         throw new Error('Generated username is empty or invalid.');

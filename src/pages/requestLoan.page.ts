@@ -1,30 +1,27 @@
 import { BasePage } from './base.page';
-import { expect, Locator, Page } from '@playwright/test';
-import { URL } from '../constants';
+import { Locator, Page } from '@playwright/test';
 import { selectDropdownByValue } from 'src/util/helpers';
+import { URL } from '../constants';
 
 export class RequestLoanPage extends BasePage {
     constructor(page: Page) {
         super(page);
     }
 
-    get requestLoanForm(): Locator {
+    // Locators
+    private get requestLoanForm(): Locator {
         return this.page.getByTestId('requestLoanForm');
     }
 
-    get requestLoanResult(): Locator {
+    private get requestLoanResult(): Locator {
         return this.page.getByTestId('requestLoanResult');
-    }
-
-    get requestLoanError(): Locator {
-        return this.page.getByTestId('requestLoanError');
     }
 
     get loanRequestDeniedMsg(): Locator {
         return this.requestLoanResult.getByTestId('loanRequestDenied').locator('p');
     }
 
-    get loanRequestApprovedMsg(): Locator {
+    private get loanRequestApprovedMsg(): Locator {
         return this.requestLoanResult.getByTestId('loanRequestApproved').locator('p').first();
     }
 
@@ -32,15 +29,15 @@ export class RequestLoanPage extends BasePage {
         return this.requestLoanResult.getByTestId('loanRequestApproved').getByTestId('newAccountId');
     }
 
-    get loanAmountInput(): Locator {
+    private get loanAmountInput(): Locator {
         return this.requestLoanForm.getByTestId('amount');
     }
 
-    get downPaymentInput(): Locator {
+    private get downPaymentInput(): Locator {
         return this.requestLoanForm.getByTestId('downPayment');
     }
 
-    get fromAccountSelect(): Locator {
+    private get fromAccountSelect(): Locator {
         return this.requestLoanForm.getByTestId('fromAccountId');
     }
 
@@ -48,47 +45,49 @@ export class RequestLoanPage extends BasePage {
         return this.requestLoanResult.getByTestId('loanStatus');
     }
 
-    get submitBtn(): Locator {
-        return this.requestLoanForm.locator('input[value="Apply Now"]');
+    private get submitBtn(): Locator {
+        return this.requestLoanForm.getByRole('button', { name: 'Apply Now' });
     }
 
+    // Actions
     async goto(): Promise<void> {
         await super.goto(URL.LOANS);
     }
 
-    async applyForALoan(loanAmount: number, downPayment: number): Promise<string | string[] | null> {
+    /**
+     * Applies for a loan and returns the result message.
+     *
+     * @param loanAmount - The amount of the loan.
+     * @param downPayment - The down payment for the loan.
+     * @param account - The account to use for the loan.
+     */
+    async applyForALoan(loanAmount: number, downPayment: number, account: string): Promise<string | null> {
         try {
-            await this.fillLoanForm(loanAmount, downPayment);
+            await this.fillLoanForm(loanAmount, downPayment, account);
             await this.submitBtn.click();
 
-            const result: string[] = await this.getResult();
+            await this.page.waitForTimeout(2000);
 
-            // await this.loanStatus.waitFor({ state: 'visible' });
-
-            // Check if a new account ID is visible and return it
-            if (await this.newAccountId.isVisible()) {
-                return (await this.newAccountId.innerText()).trim();
-            }
-
-            return result;
+            const result: string = await this.getResultText();
+            return result.trim();
         } catch (error) {
-            console.error('Error applying for a loan:', error);
             throw new Error(`Failed to apply for a loan: ${error.message}`);
         }
     }
 
-    async fillLoanForm(loanAmount: number, downPayment: number): Promise<void> {
+    /**
+     * Fills the loan application form.
+     *
+     * @param loanAmount - The amount of the loan.
+     * @param downPayment - The down payment for the loan.
+     * @param account - The account to use for the loan.
+     */
+    async fillLoanForm(loanAmount: number, downPayment: number, account: string): Promise<void> {
         await this.requestLoanForm.waitFor({ state: 'visible' });
 
-        // Fill in the loan amount and down payment
         await this.loanAmountInput.fill(loanAmount.toString());
         await this.downPaymentInput.fill(downPayment.toString());
 
-        // Select the "from account" dropdown option
-        const fromAccount: string = process.env.CUSTOMER_DEFAULT_ACCOUNT;
-        if (!fromAccount) {
-            throw new Error('Environment variable CUSTOMER_DEFAULT_ACCOUNT is not defined.');
-        }
-        await selectDropdownByValue(this.fromAccountSelect, fromAccount);
+        await selectDropdownByValue(this.fromAccountSelect, account);
     }
 }
