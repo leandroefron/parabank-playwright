@@ -81,7 +81,7 @@ npm run test:local
 Run a specific test by tag:
 
 ```bash
-npm run test:tag --grep @[tag]
+npx playwright test -g @[tag]
 ```
 
 Possibles tags:
