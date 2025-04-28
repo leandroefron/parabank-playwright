@@ -1,7 +1,7 @@
 import { BasePage } from './base.page';
 import { Locator, Page } from '@playwright/test';
 import { selectDropdownByValue } from 'src/util/helpers';
-import { URL } from '../constants';
+import { URLS } from '@/constants';
 
 export class RequestLoanPage extends BasePage {
     constructor(page: Page) {
@@ -51,7 +51,7 @@ export class RequestLoanPage extends BasePage {
 
     // Actions
     async goto(): Promise<void> {
-        await super.goto(URL.LOANS);
+        await super.goto(URLS.LOANS);
     }
 
     /**
@@ -64,7 +64,7 @@ export class RequestLoanPage extends BasePage {
     async applyForALoan(loanAmount: number, downPayment: number, account: string): Promise<void> {
         try {
             await this.fillLoanForm(loanAmount, downPayment, account);
-            
+
             await this.submitBtn.click();
         } catch (error) {
             throw new Error(`Failed to apply for a loan: ${error.message}`);

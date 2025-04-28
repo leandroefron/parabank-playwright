@@ -14,6 +14,4 @@ RUN npm install
 COPY . .
 
 # Default command to run tests
-
-# CMD ["sh", "-c", "xvfb-run --auto-servernum -- npx playwright test"]
 CMD ["sh", "-c", "rm -rf /app/reports/* && xvfb-run --auto-servernum -- npx playwright test"]

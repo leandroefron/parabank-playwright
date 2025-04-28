@@ -3,7 +3,7 @@ export const MINIMUM_BALANCE = 100.0;
 export const TRANSFER_AMOUNT = 50.0;
 export const BILL_PAY_AMOUNT = 50.0;
 
-export const URL = {
+export const URLS = {
     REGISTER: '/parabank/register.htm',
     BASE: '/parabank/index.htm',
     OPEN_ACCOUNT: '/parabank/openaccount.htm',
@@ -17,14 +17,13 @@ export const URL = {
 
 export const MESSAGES = {
     ACCOUNT_CREATED: 'Your account was created successfully. You are now logged in.',
-    LOAN_APPROVED: 'Congratulations, your loan has been approved.',
     LOAN_DENIED_AMOUNT: 'We cannot grant a loan in that amount with your available funds and down payment.',
     LOAN_DENIED_NO_FUNDS: 'You do not have sufficient funds for the given down payment.',
-    VALIDATION_ERROR: '{field} is required.',
-    WELCOME: 'Welcome {name}'
+    VALIDATION_ERROR: '{field} is required.'
 };
 
 export const TITLES = {
+    WELCOME: 'Welcome {name}',
     CUSTOMER_LOGIN: 'Customer Login',
     ACCOUNTS_OVERVIEWS: 'Accounts Overview',
     ACCOUNT_OPENED: 'Account Opened!',

@@ -1,6 +1,6 @@
-import { test, expect } from '../fixtures/custom.fixture';
+import { test, expect } from '@/fixtures/custom.fixture';
 import { AccountOverviewPage } from 'src/pages/accountOverview.page';
-import { MINIMUM_BALANCE, TITLES } from 'src/constants';
+import { MINIMUM_BALANCE, TITLES } from '@/constants';
 import { normalizeAmount } from 'src/util/helpers';
 
 test.describe('Accounts tests @all', { tag: ['@accounts'] }, () => {

@@ -1,8 +1,6 @@
-import { test, expect } from '../fixtures/custom.fixture';
+import { test, expect } from '@/fixtures/custom.fixture';
 import { getBalanceFromAccount } from 'src/util/helpers';
-import { TITLES, MESSAGES } from 'src/constants';
-import { CreateAccountData, AccountData } from 'src/types';
-import * as api from 'src/util/api';
+import { TITLES, MESSAGES } from '@/constants';
 
 const account: string = process.env.CUSTOMER_DEFAULT_ACCOUNT;
 let availableBalance: number;

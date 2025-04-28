@@ -1,7 +1,6 @@
-
 # Playwright
 node_modules/
-/test-results/
-/reports/
-/playwright/.cache/
-/playwright/.auth/
+reports/
+test-results/
+playwright/.cache/
+playwright/.auth/

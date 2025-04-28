@@ -1,5 +1,5 @@
-import { BillPayData, CustomerData } from 'src/types';
-import { BILL_PAY_AMOUNT } from 'src/constants';
+import { BillPayData, CustomerData } from '@/interfaces';
+import { BILL_PAY_AMOUNT } from '@/constants';
 
 export const customerData: CustomerData = {
     firstName: 'Peter',

@@ -1,7 +1,7 @@
 import { BasePage } from './base.page';
 import { Page } from '@playwright/test';
-import { URL } from 'src/constants';
 import { selectDropdownByValue } from 'src/util/helpers';
+import { URLS } from '@/constants';
 
 export class TransferFundsPage extends BasePage {
     constructor(page: Page) {
@@ -39,7 +39,7 @@ export class TransferFundsPage extends BasePage {
 
     // Actions
     async goto(): Promise<void> {
-        await super.goto(URL.TRANSFERS);
+        await super.goto(URLS.TRANSFERS);
     }
 
     /**
@@ -52,7 +52,7 @@ export class TransferFundsPage extends BasePage {
     async transferFunds(amount: number, fromAccount: string, toAccount: string): Promise<void> {
         try {
             await this.fillTransferForm(amount, fromAccount, toAccount);
-            
+
             await this.transferBtn.click();
         } catch (error) {
             throw new Error(`Failed to transfer funds: ${error.message}`);

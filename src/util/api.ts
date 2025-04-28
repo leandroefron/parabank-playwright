@@ -1,8 +1,8 @@
 import { APIRequestContext, APIResponse, expect } from '@playwright/test';
 import { createApiContext, mapCustomerData } from './helpers';
-import { AccountData, CreateAccountData, CustomerData, TxData } from 'src/types';
+import { AccountData, CreateAccountData, CustomerData, TxData } from '@/interfaces';
 
-const url: string = `${process.env.BASE_URL}${process.env.SERVICES_ENDPOINT}`;
+const url: string = `${process.env.BASE_URL}${process.env.SERVICES_ROUTE}`;
 
 export async function cleanDatabase(): Promise<void> {
     try {

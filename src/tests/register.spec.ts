@@ -1,6 +1,6 @@
-import { test, expect } from '../fixtures/custom.fixture';
-import { customerData } from 'src/data';
-import { MESSAGES } from 'src/constants';
+import { test, expect } from '@/fixtures/custom.fixture';
+import { customerData } from '@/data';
+import { MESSAGES, TITLES } from '@/constants';
 
 const validationFields: Array<{ tag: string; field: string }> = [
     { tag: 'First name', field: 'firstName' },
@@ -19,7 +19,8 @@ test.describe('Register page @all', { tag: ['@register'] }, () => {
     test('should successfully register a new customer @all', async ({ registerPage }) => {
         const username: string = await registerPage.registerCustomer(customerData, true);
 
-        await expect(registerPage.welcomeTitle).toHaveText(`Welcome ${username}`);
+        const expectedWelcomeMsg: string = TITLES.WELCOME.replace('{name}', username);
+        await expect(registerPage.welcomeTitle).toHaveText(expectedWelcomeMsg);
         await expect(registerPage.welcomeMessage).toHaveText(MESSAGES.ACCOUNT_CREATED);
     });
 

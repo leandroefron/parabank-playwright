@@ -1,6 +1,6 @@
-import { test as setup } from '../src/fixtures/custom.fixture';
+import { test as setup } from '@/fixtures/custom.fixture';
 import * as api from 'src/util/api';
-import { INITIAL_BALANCE, MINIMUM_BALANCE } from 'src/constants';
+import { INITIAL_BALANCE, MINIMUM_BALANCE } from '@/constants';
 
 setup('Init setup', async () => {
     try {

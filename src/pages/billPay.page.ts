@@ -1,7 +1,7 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
-import { URL } from '../constants';
-import { BillPayData } from 'src/types';
+import { URLS } from '@/constants';
+import { BillPayData } from '@/interfaces';
 import { selectDropdownByValue } from 'src/util/helpers';
 
 export class BillPayPage extends BasePage {
@@ -68,7 +68,7 @@ export class BillPayPage extends BasePage {
 
     // Actions
     async goto(): Promise<void> {
-        await super.goto(URL.BILL_PAY);
+        await super.goto(URLS.BILL_PAY);
     }
 
     /**

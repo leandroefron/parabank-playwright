@@ -1,7 +1,7 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
-import { URL } from 'src/constants';
-import { CustomerData } from 'src/types/index';
+import { URLS } from '@/constants';
+import { CustomerData } from '@/interfaces';
 
 export class UpdateInfoPage extends BasePage {
     constructor(page: Page) {
@@ -31,7 +31,7 @@ export class UpdateInfoPage extends BasePage {
 
     // Actions
     async goto(): Promise<void> {
-        await super.goto(URL.PROFILE);
+        await super.goto(URLS.PROFILE);
     }
 
     /**
@@ -44,7 +44,7 @@ export class UpdateInfoPage extends BasePage {
 
         try {
             await this.fillProfileForm(fieldsToUpdate);
-            
+
             await this.updateBtn.click();
         } catch (error) {
             throw new Error(`Failed to update profile: ${error.message}`);

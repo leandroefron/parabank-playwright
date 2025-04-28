@@ -1,5 +1,8 @@
 node_modules/
+reports/
 test-results/
+playwright/.cache/
+playwright/.auth/
 package.json
 package-lock.json
 *.log

@@ -1,5 +1,4 @@
 import { test as base } from '@playwright/test';
-
 import { BasePage } from 'src/pages/base.page';
 import { RegisterPage } from 'src/pages/register.page';
 import { OpenNewAccountPage } from 'src/pages/openAccount.page';

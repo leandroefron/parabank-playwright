@@ -1,5 +1,5 @@
 import { APIRequestContext, Locator, request } from '@playwright/test';
-import { AccountData, TxData, CustomerData } from 'src/types';
+import { AccountData, TxData, CustomerData } from '@/interfaces';
 import * as api from './api';
 
 export const authFile = 'playwright/.auth/user.json';

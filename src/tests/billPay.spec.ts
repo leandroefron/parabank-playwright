@@ -1,7 +1,7 @@
-import { test, expect } from '../fixtures/custom.fixture';
-import { billPayData } from 'src/data';
+import { test, expect } from '@/fixtures/custom.fixture';
+import { billPayData } from '@/data';
 import { getTransactionId, normalizeAmount } from 'src/util/helpers';
-import { BILL_PAY_AMOUNT, TITLES } from 'src/constants';
+import { BILL_PAY_AMOUNT, TITLES } from '@/constants';
 import moment from 'moment';
 
 const tx = {

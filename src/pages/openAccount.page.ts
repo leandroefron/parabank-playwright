@@ -1,6 +1,6 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
-import { URL } from 'src/constants';
+import { URLS } from '@/constants';
 import { selectDropdownByValue } from 'src/util/helpers';
 
 export class OpenNewAccountPage extends BasePage {
@@ -35,7 +35,7 @@ export class OpenNewAccountPage extends BasePage {
 
     // Actions
     async goto(): Promise<void> {
-        await super.goto(URL.OPEN_ACCOUNT);
+        await super.goto(URLS.OPEN_ACCOUNT);
     }
 
     /**
@@ -49,7 +49,7 @@ export class OpenNewAccountPage extends BasePage {
 
         try {
             await this.fillNewAccountForm(type, accountId);
-            
+
             await this.openAccountBtn.click();
         } catch (error) {
             throw new Error(`Failed to open a new account: ${error.message}`);

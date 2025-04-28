@@ -1,8 +1,8 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 import { getRandomUsername } from 'src/util/helpers';
-import { CustomerData } from '../types/index';
-import { URL } from '../constants';
+import { CustomerData } from '@/interfaces';
+import { URLS } from '../constants';
 
 export class RegisterPage extends BasePage {
     constructor(page: Page) {
@@ -60,7 +60,7 @@ export class RegisterPage extends BasePage {
 
     // Actions
     async goto(): Promise<void> {
-        await super.goto(URL.REGISTER);
+        await super.goto(URLS.REGISTER);
     }
 
     /**

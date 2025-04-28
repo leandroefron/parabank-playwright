@@ -1,7 +1,7 @@
-import { test, expect } from '../fixtures/custom.fixture';
+import { test, expect } from '@/fixtures/custom.fixture';
 import { getCustomerDetails } from 'src/util/api';
-import { CustomerData } from 'src/types';
-import { TITLES } from 'src/constants';
+import { CustomerData } from '@/interfaces';
+import { TITLES } from '@/constants';
 
 const updatedProfileData: CustomerData = {
     address: 'AddressModified',

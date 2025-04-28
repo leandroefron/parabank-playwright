@@ -1,7 +1,7 @@
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 import { selectDropdownByValue } from 'src/util/helpers';
-import { URL } from 'src/constants';
+import { URLS } from '@/constants';
 
 export class TransactionsPage extends BasePage {
     constructor(page: Page) {
@@ -51,7 +51,7 @@ export class TransactionsPage extends BasePage {
 
     // Actions
     async goto(): Promise<void> {
-        await super.goto(URL.TRANSACTIONS);
+        await super.goto(URLS.TRANSACTIONS);
     }
 
     /**

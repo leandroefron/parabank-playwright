@@ -1,6 +1,6 @@
-import { test, expect } from '../fixtures/custom.fixture';
-import { CreateAccountData, AccountData } from 'src/types';
-import { TITLES, TRANSFER_AMOUNT, MINIMUM_BALANCE } from 'src/constants';
+import { test, expect } from '@/fixtures/custom.fixture';
+import { CreateAccountData, AccountData } from '@/interfaces';
+import { TITLES, TRANSFER_AMOUNT, MINIMUM_BALANCE } from '@/constants';
 import { normalizeAmount } from 'src/util/helpers';
 import * as api from 'src/util/api';
 
