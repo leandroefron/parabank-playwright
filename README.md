@@ -8,34 +8,36 @@ This project contains end-to-end tests for [Parabank](https://parabank.parasoft.
 parabank-playwright/
 │
 ├── config/                      # 🔧 Setup scripts (DB, user)
-│   ├── cleanDb.setup.ts         # → Cleans DB before tests
-│   └── createUser.setup.ts      # → Creates test user
+│   ├── createCustomer.setup.ts  # → Creates test customer
+│   ├── global.setup.ts          # → Global setup before tests
+│   └── init.setup.ts            # → Inits database and sets up params
 │
 ├── playwright/                  # ⚙️ Playwright-specific configs
 │   └── .auth/                   # → Stores login state
-│       └── user.json            # → Auth state (login cookie, token, etc.)
+│       └── customer.json        # → Auth state (login cookie, token, etc.)
 │
 ├── reports/                     # 📈 HTML test reports
 │   └── index.html
 │
 ├── src/                         # 🧠 Main app code & tests
 │   ├── constants/               # → URLs, messages, titles
-│   ├── data/                    # → External test data (JSON, CSV, etc.)
+│   ├── data/                    # → Test data (JSON, CSV, etc.)
 │   ├── fixtures/                # → Reusable test setup/teardown logic
 │   ├── pages/                   # → Page Object Model classes (LoginPage, RequestLoan, etc.)
 │   ├── tests/                   # → Actual test specs
 │   ├── types/                   # → TypeScript interfaces & types
-│   └── util/                    # → Helper functions
+│   └── util/                    # → Helper and api functions
 │
 ├── test-results/                # 🖼 Screenshots, traces, etc.
 │
 ├── .env                         # 🌱 Env vars (like BASE_URL, USER_EMAIL, etc.)
 ├── .gitignore                   # 🚫 Ignore node_modules, .env, dist, etc.
+├── .prettierrc.json             # 🎨 Prettier configuration for consistent code formatting
 ├── Dockerfile                   # 🐳 Docker config for running tests
 ├── package.json                 # 📦 Dependencies & npm scripts
 ├── playwright.config.ts         # 🎯 Playwright global config
-├── tsconfig.json                # 🧪 TypeScript config
-└── README.md                    # 📖 How to run, setup, etc.
+├── README.md                    # 📖 How to run, setup, etc.
+└── tsconfig.json                # 🧪 TypeScript config
 ```
 
 ## ✅ Prerequisites
@@ -83,7 +85,6 @@ npm run test:tag --grep @[tag]
 ```
 
 Possibles tags:
-
 - login
 - register
 - customers
@@ -96,7 +97,7 @@ Possibles tags:
 
 ### 🐳 Run in Docker
 
-This method ensures environment consistency with no local setup needed.
+This method ensures environment consistency with no local setup needed.\
 Running this command will build the Docker image and then run the tests inside the Docker container.
 
 ```bash
