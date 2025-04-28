@@ -63,6 +63,7 @@ export class Sidebar {
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
         await this.logInBtn.click();
+
         await this.welcomeMsg.waitFor({ state: 'visible' });
     }
 

@@ -88,7 +88,7 @@ Possibles tags:
 - register
 - customers
 - accounts
-- billpay
+- bills
 - loans
 - transfers
 

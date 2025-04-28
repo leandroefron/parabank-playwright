@@ -93,7 +93,7 @@ export async function createAccount(data: CreateAccountData): Promise<string> {
 
         return body.id;
     } catch (error) {
-        throw new Error('Creating account: ' + error);
+        throw new Error('Creating account: ' + error.message);
     }
 }
 

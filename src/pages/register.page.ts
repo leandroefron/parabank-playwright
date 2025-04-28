@@ -64,29 +64,24 @@ export class RegisterPage extends BasePage {
     }
 
     /**
-     * Fill the registration form.
-     * @param customerData - Data for registration
-     * @param submit - Whether to submit the form
+     * Registers a customer by filling the form and submitting it.
+     *
+     * @param customerData - Data for registration.
+     * @param submit - Whether to submit the form.
+     * @param fieldToOmit - Optional field to omit while filling the form.
      */
-    async fillRegisterForm(customerData: CustomerData, submit: boolean): Promise<string> {
+    async registerCustomer(customerData: CustomerData, submit: boolean, fieldToOmit?: string): Promise<string> {
         await this.customerForm.waitFor({ state: 'visible' });
 
         try {
-            // Generate a random username
             if (!customerData.username || customerData.username.trim() === '') {
                 customerData.username = await getRandomUsername();
             }
 
-            // Fill each field dynamically
-            for (const [key, input] of Object.entries(this.inputFields)) {
-                if (customerData[key]) {
-                    await input.fill(customerData[key]);
-                }
-            }
+            await this.fillRegisterForm(customerData, fieldToOmit);
 
             if (submit) {
                 await this.submitBtn.click();
-                await this.welcomeTitle.waitFor({ state: 'visible' });
             }
 
             return customerData.username;
@@ -96,19 +91,17 @@ export class RegisterPage extends BasePage {
     }
 
     /**
-     * Fill a specific input field.
-     * @param field - Field name
-     * @param value - Value to fill
+     * Fills the registration form with the provided data.
+     *
+     * @param customerData - Data for registration.
+     * @param fieldToOmit - Optional field to omit while filling the form.
      */
-    async fillInputField(field: string, value: string): Promise<void> {
-        const fieldLocator: Locator = this.inputFields[field];
-
-        if (!fieldLocator) {
-            throw new Error(`Field locator for "${field}" not found.`);
+    async fillRegisterForm(customerData: CustomerData, fieldToOmit?: string): Promise<void> {
+        for (const [field, input] of Object.entries(this.inputFields)) {
+            if (field !== fieldToOmit && customerData[field] !== undefined) {
+                await input.fill(String(customerData[field]));
+            }
         }
-
-        await fieldLocator.waitFor({ state: 'visible' });
-        await fieldLocator.fill(value);
     }
 
     /**

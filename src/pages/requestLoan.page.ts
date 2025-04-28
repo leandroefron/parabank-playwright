@@ -9,7 +9,7 @@ export class RequestLoanPage extends BasePage {
     }
 
     // Locators
-    private get requestLoanForm(): Locator {
+    get requestLoanForm(): Locator {
         return this.page.getByTestId('requestLoanForm');
     }
 
@@ -65,8 +65,6 @@ export class RequestLoanPage extends BasePage {
         try {
             await this.fillLoanForm(loanAmount, downPayment, account);
             await this.submitBtn.click();
-
-            await this.page.waitForTimeout(2000);
 
             const result: string = await this.getResultText();
             return result.trim();

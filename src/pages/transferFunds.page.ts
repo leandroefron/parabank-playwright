@@ -8,11 +8,12 @@ export class TransferFundsPage extends BasePage {
         super(page);
     }
 
+    // Locators
     get transferForm() {
         return this.page.getByTestId('showForm');
     }
 
-    get resultTitle() {
+    private get resultTitle() {
         return this.page.getByTestId('showResult').locator('h1');
     }
 
@@ -20,37 +21,60 @@ export class TransferFundsPage extends BasePage {
         return this.page.getByTestId('showResult').locator('p').first();
     }
 
-    get amountInput() {
+    private get amountInput() {
         return this.transferForm.getByTestId('amount');
     }
 
-    get fromAccountSelect() {
+    private get fromAccountSelect() {
         return this.transferForm.getByTestId('fromAccountId');
     }
 
-    get toAccountSelect() {
+    private get toAccountSelect() {
         return this.transferForm.getByTestId('toAccountId');
     }
 
-    get transferBtn() {
+    private get transferBtn() {
         return this.page.locator('input[value="Transfer"]');
     }
 
+    // Actions
     async goto(): Promise<void> {
         await super.goto(URL.TRANSFERS);
     }
 
-    async transferFunds(amount: string | number, fromAccount: string, toAccount: string): Promise<void> {
+    /**
+     * Transfers funds between accounts and returns the result message.
+     *
+     * @param amount - The amount to transfer.
+     * @param fromAccount - The source account ID.
+     * @param toAccount - The destination account ID.
+     */
+    async transferFunds(amount: number, fromAccount: string, toAccount: string): Promise<string> {
+        try {
+            await this.fillTransferForm(amount, fromAccount, toAccount);
+            await this.transferBtn.click();
+
+            const result: string = await this.getResultText();
+            return result.trim();
+        } catch (error) {
+            throw new Error(`Failed to transfer funds: ${error.message}`);
+        }
+    }
+
+    /**
+     * Fills the transfer form with the provided details.
+     *
+     * @param amount - The amount to transfer.
+     * @param fromAccount - The source account ID.
+     * @param toAccount - The destination account ID.
+     */
+    async fillTransferForm(amount: number, fromAccount: string, toAccount: string): Promise<void> {
         await this.transferForm.waitFor({ state: 'visible' });
 
-        const amountStr: string = typeof amount === 'number' ? amount.toString() : amount;
-
-        await this.amountInput.fill(amountStr);
+        await this.amountInput.fill(amount.toString());
         selectDropdownByValue(this.fromAccountSelect, fromAccount);
         selectDropdownByValue(this.toAccountSelect, toAccount);
-        await this.page.waitForTimeout(500);
 
-        await this.transferBtn.click();
-        await this.resultTitle.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(500);
     }
 }

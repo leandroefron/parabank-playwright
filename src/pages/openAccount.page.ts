@@ -9,7 +9,7 @@ export class OpenNewAccountPage extends BasePage {
     }
 
     // Locators
-    private get container(): Locator {
+    get container(): Locator {
         return this.page.getByTestId('openAccountForm');
     }
 
@@ -46,21 +46,20 @@ export class OpenNewAccountPage extends BasePage {
      */
     async openNewAccount(type: string, accountId: string): Promise<string> {
         try {
-            await selectDropdownByValue(this.typeAccountSelect, type);
-            await selectDropdownByValue(this.fromAccountIdSelect, accountId);
+            await this.fillNewAccountForm(type, accountId);
             await this.openAccountBtn.click();
 
-            await this.openAccountResult.waitFor({ state: 'visible' });
-
-            const accountNumber: string = (await this.newAccountNumber.textContent())?.trim();
-
-            if (!accountNumber) {
-                throw new Error('Failed to retrieve the new account number.');
-            }
-
-            return accountNumber;
+            const result: string = await this.getResultText();
+            return result.trim();
         } catch (error) {
             throw new Error(`Failed to open a new account: ${error.message}`);
         }
+    }
+
+    async fillNewAccountForm(type: string, accountId: string): Promise<void> {
+        await this.container.waitFor({ state: 'visible' });
+
+        await selectDropdownByValue(this.typeAccountSelect, type);
+        await selectDropdownByValue(this.fromAccountIdSelect, accountId);
     }
 }

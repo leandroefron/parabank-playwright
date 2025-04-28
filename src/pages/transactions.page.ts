@@ -52,25 +52,34 @@ export class TransactionsPage extends BasePage {
         await super.goto(URL.TRANSACTIONS);
     }
 
-    async findByTransactionId(accountId: string, txId: string): Promise<void> {
+    async findByTransactionId(accountId: string, txId: string): Promise<string> {
         await selectDropdownByValue(this.accountIdSelect, accountId);
         await this.transactionIdInput.waitFor({ state: 'visible' });
         await this.transactionIdInput.fill(txId);
         await this.findByIdBtn.click();
+
+        const result: string = await this.getResultText();
+        return result.trim();
     }
 
-    async findByTransactionDate(accountId: string, txDate: string): Promise<void> {
+    async findByTransactionDate(accountId: string, txDate: string): Promise<string> {
         await selectDropdownByValue(this.accountIdSelect, accountId);
         await this.transactionDateInput.waitFor({ state: 'visible' });
         await this.transactionDateInput.fill(txDate);
         await this.findByDateBtn.click();
+
+        const result: string = await this.getResultText();
+        return result.trim();
     }
 
-    async findByTransactionAmount(accountId: string, txAmount: number): Promise<void> {
+    async findByTransactionAmount(accountId: string, txAmount: number): Promise<string> {
         await selectDropdownByValue(this.accountIdSelect, accountId);
         await this.amountInput.waitFor({ state: 'visible' });
         await this.amountInput.fill(txAmount.toString());
         await this.findByAmountBtn.click();
+
+        const result: string = await this.getResultText();
+        return result.trim();
     }
 
     async getTransactionRowsCount(): Promise<number> {

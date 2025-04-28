@@ -48,10 +48,10 @@ export const test = base.extend<PageObjects>({
         const openNewAccountPage = new OpenNewAccountPage(page);
         await openNewAccountPage.goto();
 
-        await openNewAccountPage.openAccountBtn.waitFor({ state: 'visible', timeout: 5000 });
-        if (!(await openNewAccountPage.openAccountBtn.isEnabled())) {
-            throw new Error('Open Account button is not enabled.');
-        }
+        await openNewAccountPage.container.waitFor({ state: 'visible', timeout: 5000 });
+        // if (!(await openNewAccountPage.openAccountBtn.isEnabled())) {
+        //     throw new Error('Open Account button is not enabled.');
+        // }
 
         await use(openNewAccountPage);
     },

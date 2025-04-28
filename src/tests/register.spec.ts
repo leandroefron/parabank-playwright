@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures/custom.fixture';
 import { customerData } from 'src/data';
 import { MESSAGES } from 'src/constants';
 
-const validationFields = [
+const validationFields: Array<{ tag: string; field: string }> = [
     { tag: 'First name', field: 'firstName' },
     { tag: 'Last name', field: 'lastName' },
     { tag: 'Address', field: 'address' },
@@ -15,9 +15,9 @@ const validationFields = [
     { tag: 'Password confirmation', field: 'confirmPassword' }
 ];
 
-test.describe('Register page', { tag: ['@register'] }, () => {
+test.describe('Register page @all', { tag: ['@register'] }, () => {
     test('should successfully register a new customer @all', async ({ registerPage }) => {
-        const username: string = await registerPage.fillRegisterForm(customerData, true);
+        const username: string = await registerPage.registerCustomer(customerData, true);
 
         await expect(registerPage.welcomeTitle).toHaveText(`Welcome ${username}`);
         await expect(registerPage.welcomeMessage).toHaveText(MESSAGES.ACCOUNT_CREATED);
@@ -25,12 +25,7 @@ test.describe('Register page', { tag: ['@register'] }, () => {
 
     validationFields.forEach(({ tag, field }) => {
         test(`should show validation error when '${tag}' is empty`, async ({ registerPage }) => {
-            await registerPage.fillRegisterForm(customerData, false);
-
-            // Clear the specific field being tested
-            await registerPage.fillInputField(field, '');
-
-            await registerPage.submitBtn.click();
+            await registerPage.registerCustomer(customerData, true, field);
 
             const errorMsg: string = (await registerPage.getErrorMessage(field)).trim();
             const expectedErrorMsg: string = MESSAGES.VALIDATION_ERROR.replace('{field}', tag);

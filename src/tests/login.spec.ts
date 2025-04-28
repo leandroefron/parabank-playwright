@@ -1,12 +1,15 @@
 import { test, expect } from '../fixtures/custom.fixture';
 import { customerData } from 'src/data';
-import { URL } from 'src/constants';
+import { URL, TITLES } from 'src/constants';
 
 const username: string = process.env.CUSTOMER_USERNAME;
 
 test.describe('Login page @all', { tag: ['@login'] }, () => {
     test('should login successfully with valid credentials', async ({ basePage, accountOverviewPage }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
+
+        const result: string = await basePage.getResultText();
+        expect(result).toContain(TITLES.ACCOUNTS_OVERVIEWS);
 
         const completeName: string = `${customerData.firstName} ${customerData.lastName}`;
         expect.soft(basePage.sidebar.welcomeMsg).toHaveText(`Welcome ${completeName}`);

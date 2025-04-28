@@ -1,6 +1,6 @@
-export const INITIAL_BALANCE = '1000.00';
-export const MINIMUM_BALANCE = '100.00';
-export const TRANSFER_AMOUNT = '50.00';
+export const INITIAL_BALANCE = 1000.0;
+export const MINIMUM_BALANCE = 100.0;
+export const TRANSFER_AMOUNT = 50.0;
 export const BILL_PAY_AMOUNT = 50.0;
 
 export const URL = {
@@ -26,7 +26,10 @@ export const MESSAGES = {
 
 export const TITLES = {
     CUSTOMER_LOGIN: 'Customer Login',
+    ACCOUNTS_OVERVIEWS: 'Accounts Overview',
     ACCOUNT_OPENED: 'Account Opened!',
     BILL_PAY_COMPLETE: 'Bill Payment Complete',
-    TRANSFER_COMPLETE: 'Transfer Complete!'
+    TRANSFER_COMPLETE: 'Transfer Complete!',
+    LOAN_PROCESSED: 'Loan Request Processed',
+    TRANSACTION_RESULTS: 'Transaction Results'
 };

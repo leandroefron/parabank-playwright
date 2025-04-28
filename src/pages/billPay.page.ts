@@ -26,40 +26,32 @@ export class BillPayPage extends BasePage {
         return this.billPayResult.locator('p').first();
     }
 
-    private get payeeNameInput(): Locator {
-        return this.page.locator('input[name="payee.name"]');
+    private get inputFields(): Record<keyof BillPayData, Locator> {
+        return {
+            payeeName: this.page.locator('input[name="payee.name"]'),
+            address: this.page.locator('input[name="payee.address.street"]'),
+            city: this.page.locator('input[name="payee.address.city"]'),
+            state: this.page.locator('input[name="payee.address.state"]'),
+            zipCode: this.page.locator('input[name="payee.address.zipCode"]'),
+            phoneNumber: this.page.locator('input[name="payee.phoneNumber"]'),
+            account: this.page.locator('input[name="payee.accountNumber"]'),
+            verifyAccount: this.page.locator('input[name="verifyAccount"]'),
+            amount: this.page.locator('input[name="amount"]')
+        };
     }
 
-    private get addressInput(): Locator {
-        return this.page.locator('input[name="payee.address.street"]');
-    }
-
-    private get cityInput(): Locator {
-        return this.page.locator('input[name="payee.address.city"]');
-    }
-
-    private get stateInput(): Locator {
-        return this.page.locator('input[name="payee.address.state"]');
-    }
-
-    private get zipCodeInput(): Locator {
-        return this.page.locator('input[name="payee.address.zipCode"]');
-    }
-
-    private get phoneInput(): Locator {
-        return this.page.locator('input[name="payee.phoneNumber"]');
-    }
-
-    private get accountInput(): Locator {
-        return this.page.locator('input[name="payee.accountNumber"]');
-    }
-
-    private get verifyAccountInput(): Locator {
-        return this.page.locator('input[name="verifyAccount"]');
-    }
-
-    private get amountInput(): Locator {
-        return this.page.locator('input[name="amount"]');
+    private get errorFields(): Record<string, Locator> {
+        return {
+            payeeName: this.page.getByTestId('validationModel-name'),
+            address: this.page.getByTestId('validationModel-address'),
+            city: this.page.getByTestId('validationModel-city'),
+            state: this.page.getByTestId('validationModel-state'),
+            zipCode: this.page.getByTestId('validationModel-zipCode'),
+            phoneNumber: this.page.getByTestId('validationModel-phoneNumber'),
+            account: this.page.getByTestId('validationModel-account-empty'),
+            verifyAccount: this.page.getByTestId('validationModel-verifyAccount-empty'),
+            amount: this.page.getByTestId('validationModel-amount-empty')
+        };
     }
 
     get submitBtn(): Locator {
@@ -70,7 +62,7 @@ export class BillPayPage extends BasePage {
         return this.billPayForm.locator('select[name="fromAccountId"]');
     }
 
-    private get fromAccountIdResult(): Locator {
+    get fromAccountIdResult(): Locator {
         return this.billPayResult.getByTestId('fromAccountId');
     }
 
@@ -80,52 +72,61 @@ export class BillPayPage extends BasePage {
     }
 
     /**
-     * Fill and optionally submit the bill pay form.
+     * Fills and optionally submits the bill pay form.
      *
-     * @param billPayData - Data to fill the form
-     * @param submit - Whether to submit the form after filling
-     * @param fieldToOmit - Optional field name to skip filling
+     * @param billPayData - Data to fill the form.
+     * @param submit - Whether to submit the form after filling.
+     * @param fieldToOmit - Optional field name to skip filling.
      */
-    async fillBillPayForm(billPayData: BillPayData, submit: boolean, fieldToOmit?: string): Promise<string | null> {
+    async payBill(billPayData: BillPayData, submit: boolean, fieldToOmit?: string): Promise<string | null> {
+        await this.billPayForm.waitFor({ state: 'visible' });
+
         try {
-            await this.billPayForm.waitFor({ state: 'visible' });
-
-            const fieldMap: { [K in keyof BillPayData]: Locator } = {
-                payeeName: this.payeeNameInput,
-                address: this.addressInput,
-                city: this.cityInput,
-                state: this.stateInput,
-                zipCode: this.zipCodeInput,
-                phoneNumber: this.phoneInput,
-                account: this.accountInput,
-                verifyAccount: this.verifyAccountInput,
-                amount: this.amountInput
-            };
-
-            for (const [field, input] of Object.entries(fieldMap) as [keyof BillPayData, Locator][]) {
-                if (field !== fieldToOmit && billPayData[field] !== undefined) {
-                    await input.fill(String(billPayData[field]));
-                }
-            }
-
-            await selectDropdownByValue(this.fromAccountIdSelect, process.env.CUSTOMER_DEFAULT_ACCOUNT);
+            await this.fillBillPayForm(billPayData, fieldToOmit);
 
             if (submit && !fieldToOmit) {
                 await this.submitBtn.click();
-                await this.billPayResult.waitFor({ state: 'visible' });
 
-                const accountId = (await this.fromAccountIdResult.textContent())?.trim();
-
-                if (!accountId) {
-                    throw new Error('Failed to retrieve the account ID after payment.');
-                }
-
-                return accountId;
+                const result: string = await this.getResultText();
+                return result.trim();
             }
 
-            return null;
+            await this.submitBtn.click();
         } catch (error) {
             throw new Error(`Failed to fill the bill pay form: ${error.message}`);
         }
+    }
+
+    /**
+     * Fills the bill pay form with the provided data.
+     *
+     * @param billPayData - Data to fill the form.
+     * @param fieldToOmit - Optional field name to skip filling.
+     */
+    async fillBillPayForm(billPayData: BillPayData, fieldToOmit?: string): Promise<void> {
+        for (const [field, input] of Object.entries(this.inputFields)) {
+            if (field !== fieldToOmit && billPayData[field] !== undefined) {
+                await input.fill(String(billPayData[field]));
+            }
+        }
+
+        await selectDropdownByValue(this.fromAccountIdSelect, process.env.CUSTOMER_DEFAULT_ACCOUNT);
+    }
+
+    /**
+     * Get an error message for a specific field.
+     * @param field - Field name
+     */
+    async getErrorMessage(field: string): Promise<string> {
+        const errorLocator: Locator = this.errorFields[field];
+
+        if (!errorLocator) {
+            throw new Error(`Error field locator for "${field}" not found.`);
+        }
+
+        await errorLocator.waitFor({ state: 'visible' });
+        const errorMessage: string = (await errorLocator.textContent()).trim();
+
+        return errorMessage;
     }
 }

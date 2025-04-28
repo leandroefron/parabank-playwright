@@ -7,63 +7,77 @@ import moment from 'moment';
 const tx = {
     id: '',
     accountId: '',
-    date: moment().format('MM-DD-YYYY'),
+    date: moment().utc().format('MM-DD-YYYY'),
     type: 'Debit',
     description: `Bill Payment to ${billPayData.payeeName}`,
     amount: BILL_PAY_AMOUNT
 };
 
-const validationFields: Array<{ tag: string; errorId: string; expectedMsg: string }> = [
-    { tag: 'payeeName', errorId: 'validationModel-name', expectedMsg: 'Payee name is required.' },
-    { tag: 'address', errorId: 'validationModel-address', expectedMsg: 'Address is required.' },
-    { tag: 'city', errorId: 'validationModel-city', expectedMsg: 'City is required.' },
-    { tag: 'state', errorId: 'validationModel-state', expectedMsg: 'State is required.' },
-    { tag: 'zipCode', errorId: 'validationModel-zipCode', expectedMsg: 'Zip Code is required.' },
-    { tag: 'phoneNumber', errorId: 'validationModel-phoneNumber', expectedMsg: 'Phone number is required.' },
-    { tag: 'account', errorId: 'validationModel-account-empty', expectedMsg: 'Account number is required.' },
-    { tag: 'verifyAccount', errorId: 'validationModel-verifyAccount-empty', expectedMsg: 'Account number is required.' },
-    { tag: 'amount', errorId: 'validationModel-amount-empty', expectedMsg: 'The amount cannot be empty.' }
+const validationFields: Array<{ field: string; expectedMsg: string }> = [
+    { field: 'payeeName', expectedMsg: 'Payee name is required.' },
+    { field: 'address', expectedMsg: 'Address is required.' },
+    { field: 'city', expectedMsg: 'City is required.' },
+    { field: 'state', expectedMsg: 'State is required.' },
+    { field: 'zipCode', expectedMsg: 'Zip Code is required.' },
+    { field: 'phoneNumber', expectedMsg: 'Phone number is required.' },
+    { field: 'account', expectedMsg: 'Account number is required.' },
+    { field: 'verifyAccount', expectedMsg: 'Account number is required.' },
+    { field: 'amount', expectedMsg: 'The amount cannot be empty.' }
 ];
 
-test.describe.serial('Bill Pay tests @all', { tag: ['@billPay'] }, () => {
+test.describe.serial('Bill Pay tests @all', { tag: ['@bills'] }, () => {
     test('should successfully pay a bill', async ({ billPayPage }) => {
-        tx.accountId = await billPayPage.fillBillPayForm(billPayData, true);
+        const result: string = await billPayPage.payBill(billPayData, true);
 
+        expect(result).toContain(TITLES.BILL_PAY_COMPLETE);
+
+        tx.accountId = (await billPayPage.fromAccountIdResult.textContent())?.trim();
         tx.id = await getTransactionId(tx.accountId, tx.type, tx.amount, tx.description);
 
         const expectedMsg = `Bill Payment to ${billPayData.payeeName} in the amount of $${normalizeAmount(BILL_PAY_AMOUNT)} from account ${process.env.CUSTOMER_DEFAULT_ACCOUNT} was successful.`;
-
-        expect.soft(billPayPage.resultTitle).toHaveText(TITLES.BILL_PAY_COMPLETE);
         expect(billPayPage.resultMessage).toHaveText(expectedMsg);
     });
 
-    validationFields.forEach(({ tag, errorId, expectedMsg }) => {
-        test(`should show validation error when '${tag}' is empty`, async ({ billPayPage }) => {
-            await billPayPage.fillBillPayForm(billPayData, false, tag);
+    validationFields.forEach(({ field, expectedMsg }) => {
+        test(`should show validation error when '${field}' is empty`, async ({ billPayPage }) => {
+            await billPayPage.payBill(billPayData, true, field);
 
-            await billPayPage.submitBtn.click();
-
-            const errorMsg: string = (await billPayPage.page.getByTestId(errorId).textContent()).trim();
+            const errorMsg: string = (await billPayPage.getErrorMessage(field)).trim();
             expect(errorMsg).toBe(expectedMsg);
         });
     });
 
     test.skip('should find a transaction by ID', async ({ transactionsPage }) => {
-        await transactionsPage.findByTransactionId(tx.accountId, tx.id);
-        await transactionsPage.page.waitForTimeout(5000);
+        await verifyTransactionSearch(transactionsPage, 'findByTransactionId', tx.accountId, tx.id);
     });
 
     test('should find a transaction by date', async ({ transactionsPage }) => {
-        await transactionsPage.findByTransactionDate(tx.accountId, tx.date);
-
-        const isPresent: boolean = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
-        expect(isPresent).toBeTruthy();
+        await verifyTransactionSearch(transactionsPage, 'findByTransactionDate', tx.accountId, tx.date);
     });
 
     test('should find a transaction by amount', async ({ transactionsPage }) => {
-        await transactionsPage.findByTransactionAmount(tx.accountId, tx.amount);
-
-        const isPresent: boolean = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
-        expect(isPresent).toBeTruthy();
+        await verifyTransactionSearch(transactionsPage, 'findByTransactionAmount', tx.accountId, tx.amount);
     });
 });
+
+/**
+ * Verifies a transaction search by a specific method.
+ *
+ * @param transactionsPage - The transactions page object.
+ * @param searchMethod - The method to use for searching (e.g., 'findByTransactionId').
+ * @param accountId - The account ID to search within.
+ * @param searchValue - The value to search for (e.g., transaction ID, date, or amount).
+ */
+async function verifyTransactionSearch(
+    transactionsPage: any,
+    searchMethod: 'findByTransactionId' | 'findByTransactionDate' | 'findByTransactionAmount',
+    accountId: string,
+    searchValue: string | number
+): Promise<void> {
+    const result: string = await transactionsPage[searchMethod](accountId, searchValue);
+
+    expect(result).toBe(TITLES.TRANSACTION_RESULTS);
+
+    const isPresent = await transactionsPage.findResults(tx.date, tx.description, BILL_PAY_AMOUNT);
+    expect(isPresent).toBeTruthy();
+}
