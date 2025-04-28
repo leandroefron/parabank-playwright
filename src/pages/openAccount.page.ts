@@ -9,12 +9,12 @@ export class OpenNewAccountPage extends BasePage {
     }
 
     // Locators
-    get container(): Locator {
+    get openAccountForm(): Locator {
         return this.page.getByTestId('openAccountForm');
     }
 
     private get typeAccountSelect(): Locator {
-        return this.container.getByTestId('type');
+        return this.openAccountForm.getByTestId('type');
     }
 
     private get fromAccountIdSelect(): Locator {
@@ -44,21 +44,19 @@ export class OpenNewAccountPage extends BasePage {
      * @param type - Type of account to open (e.g., 'SAVINGS', 'CHECKING')
      * @param accountId - ID of the existing account to transfer funds from
      */
-    async openNewAccount(type: string, accountId: string): Promise<string> {
+    async openNewAccount(type: string, accountId: string): Promise<void> {
+        await this.openAccountForm.waitFor({ state: 'visible' });
+
         try {
             await this.fillNewAccountForm(type, accountId);
+            
             await this.openAccountBtn.click();
-
-            const result: string = await this.getResultText();
-            return result.trim();
         } catch (error) {
             throw new Error(`Failed to open a new account: ${error.message}`);
         }
     }
 
     async fillNewAccountForm(type: string, accountId: string): Promise<void> {
-        await this.container.waitFor({ state: 'visible' });
-
         await selectDropdownByValue(this.typeAccountSelect, type);
         await selectDropdownByValue(this.fromAccountIdSelect, accountId);
     }

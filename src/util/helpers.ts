@@ -67,11 +67,8 @@ export async function selectDropdownByValue(locator: Locator, value: string | nu
         throw new Error('Dropdown is not enabled.');
     }
 
-    const valueStr: string = value.toString();
-
     try {
-        // await locator.selectOption({ value: 'valueStr' });
-        await locator.selectOption(valueStr);
+        await locator.selectOption(value.toString());
     } catch (error) {
         throw new Error(`Failed to select the option with value "${value}": ${error}`);
     }

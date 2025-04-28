@@ -18,10 +18,10 @@ test.describe('Login page @all', { tag: ['@login'] }, () => {
         expect(accountsQty).toBeGreaterThan(0);
     });
 
-    test('should log out successfully', async ({ basePage, homePage, page }) => {
+    test('should log out successfully', async ({ basePage, page }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
 
-        await homePage.sidebar.logOutUser();
+        await basePage.sidebar.logOutUser();
 
         await expect(basePage.sidebar.loginPanel).toBeVisible();
         expect(page.url()).toContain(URL.BASE);

@@ -13,8 +13,9 @@ test.describe('Transfer funds tests @all', { tag: ['@transfers'] }, () => {
     });
 
     test('should transfer funds successfully', async ({ transferFundsPage }) => {
-        const result: string = await transferFundsPage.transferFunds(TRANSFER_AMOUNT, fromAccountId, destinationAccountId);
+        await transferFundsPage.transferFunds(TRANSFER_AMOUNT, fromAccountId, destinationAccountId);
 
+        const result: string = await transferFundsPage.getResultText();
         expect(result).toContain(TITLES.TRANSFER_COMPLETE);
 
         const expectedMessage: string = `$${normalizeAmount(TRANSFER_AMOUNT)} has been transferred from account #${fromAccountId} to account #${destinationAccountId}.`;

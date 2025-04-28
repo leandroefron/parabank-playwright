@@ -31,5 +31,6 @@ export const TITLES = {
     BILL_PAY_COMPLETE: 'Bill Payment Complete',
     TRANSFER_COMPLETE: 'Transfer Complete!',
     LOAN_PROCESSED: 'Loan Request Processed',
-    TRANSACTION_RESULTS: 'Transaction Results'
+    TRANSACTION_RESULTS: 'Transaction Results',
+    PROFILE_UPDATED: 'Profile Updated'
 };

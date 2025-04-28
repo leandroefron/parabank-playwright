@@ -8,6 +8,7 @@ export class UpdateInfoPage extends BasePage {
         super(page);
     }
 
+    // Locators
     get updateProfileForm(): Locator {
         return this.page.getByTestId('updateProfileForm');
     }
@@ -38,18 +39,16 @@ export class UpdateInfoPage extends BasePage {
      *
      * @param fieldsToUpdate - The fields to update with their new values.
      */
-    async fillAndSubmitUpdateForm(fieldsToUpdate: CustomerData): Promise<void> {
+    async updateProfile(fieldsToUpdate: CustomerData): Promise<void> {
         await this.updateProfileForm.waitFor({ state: 'visible' });
 
-        for (const [field, value] of Object.entries(fieldsToUpdate)) {
-            const input: Locator = this.inputFields[field];
-            if (!input) {
-                throw new Error(`Field "${field}" is not recognized.`);
-            }
-            await this.fillInputField(input, field, value);
+        try {
+            await this.fillProfileForm(fieldsToUpdate);
+            
+            await this.updateBtn.click();
+        } catch (error) {
+            throw new Error(`Failed to update profile: ${error.message}`);
         }
-
-        await this.updateBtn.click();
     }
 
     /**
@@ -59,12 +58,18 @@ export class UpdateInfoPage extends BasePage {
      * @param field - The name of the field being updated.
      * @param value - The value to fill in the field.
      */
-    private async fillInputField(input: Locator, field: string, value: string): Promise<void> {
-        if (!input.isEditable()) {
-            throw new Error(`Field "${field}" is not editable.`);
-        }
+    private async fillProfileForm(fieldsToUpdate: CustomerData): Promise<void> {
+        for (const [field, value] of Object.entries(fieldsToUpdate)) {
+            const input: Locator = this.inputFields[field];
+            if (!input) {
+                throw new Error(`Field "${field}" is not recognized.`);
+            }
+            if (!input.isEditable()) {
+                throw new Error(`Field "${field}" is not editable.`);
+            }
 
-        await this.page.waitForTimeout(500);
-        await input.fill(value);
+            await this.page.waitForTimeout(100);
+            await input.fill(value);
+        }
     }
 }

@@ -16,8 +16,9 @@ test.describe.serial('Request Loan tests @all', { tag: ['@loans'] }, () => {
         const loanAmount: number = availableBalance - 300;
         const downPayment: number = availableBalance - 300;
 
-        const result: string = await requestLoanPage.applyForALoan(loanAmount, downPayment, account);
+        await requestLoanPage.applyForALoan(loanAmount, downPayment, account);
 
+        const result: string = await requestLoanPage.getResultText();
         expect(result).toContain(TITLES.LOAN_PROCESSED);
 
         const newAccountId: string = await getNewAccountId(requestLoanPage);
@@ -29,9 +30,11 @@ test.describe.serial('Request Loan tests @all', { tag: ['@loans'] }, () => {
         const loanAmount: number = availableBalance - 300;
         const downPayment: number = availableBalance + 10;
 
-        const result: string = await requestLoanPage.applyForALoan(loanAmount, downPayment, account);
+        await requestLoanPage.applyForALoan(loanAmount, downPayment, account);
 
+        const result: string = await requestLoanPage.getResultText();
         expect(result).toContain(TITLES.LOAN_PROCESSED);
+
         expect(requestLoanPage.loanStatus).toHaveText('Denied');
         expect(requestLoanPage.loanRequestDeniedMsg).toHaveText(MESSAGES.LOAN_DENIED_NO_FUNDS);
     });

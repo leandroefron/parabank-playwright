@@ -49,13 +49,11 @@ export class TransferFundsPage extends BasePage {
      * @param fromAccount - The source account ID.
      * @param toAccount - The destination account ID.
      */
-    async transferFunds(amount: number, fromAccount: string, toAccount: string): Promise<string> {
+    async transferFunds(amount: number, fromAccount: string, toAccount: string): Promise<void> {
         try {
             await this.fillTransferForm(amount, fromAccount, toAccount);
+            
             await this.transferBtn.click();
-
-            const result: string = await this.getResultText();
-            return result.trim();
         } catch (error) {
             throw new Error(`Failed to transfer funds: ${error.message}`);
         }

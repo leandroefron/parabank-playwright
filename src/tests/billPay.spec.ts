@@ -27,8 +27,9 @@ const validationFields: Array<{ field: string; expectedMsg: string }> = [
 
 test.describe.serial('Bill Pay tests @all', { tag: ['@bills'] }, () => {
     test('should successfully pay a bill', async ({ billPayPage }) => {
-        const result: string = await billPayPage.payBill(billPayData, true);
+        await billPayPage.payBill(billPayData, true);
 
+        const result: string = await billPayPage.getResultText();
         expect(result).toContain(TITLES.BILL_PAY_COMPLETE);
 
         tx.accountId = (await billPayPage.fromAccountIdResult.textContent())?.trim();
@@ -47,7 +48,7 @@ test.describe.serial('Bill Pay tests @all', { tag: ['@bills'] }, () => {
         });
     });
 
-    test.skip('should find a transaction by ID', async ({ transactionsPage }) => {
+    test('should find a transaction by ID', async ({ transactionsPage }) => {
         await verifyTransactionSearch(transactionsPage, 'findByTransactionId', tx.accountId, tx.id);
     });
 

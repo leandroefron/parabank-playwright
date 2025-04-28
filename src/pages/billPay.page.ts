@@ -78,18 +78,11 @@ export class BillPayPage extends BasePage {
      * @param submit - Whether to submit the form after filling.
      * @param fieldToOmit - Optional field name to skip filling.
      */
-    async payBill(billPayData: BillPayData, submit: boolean, fieldToOmit?: string): Promise<string | null> {
+    async payBill(billPayData: BillPayData, submit: boolean, fieldToOmit?: string): Promise<void> {
         await this.billPayForm.waitFor({ state: 'visible' });
 
         try {
             await this.fillBillPayForm(billPayData, fieldToOmit);
-
-            if (submit && !fieldToOmit) {
-                await this.submitBtn.click();
-
-                const result: string = await this.getResultText();
-                return result.trim();
-            }
 
             await this.submitBtn.click();
         } catch (error) {

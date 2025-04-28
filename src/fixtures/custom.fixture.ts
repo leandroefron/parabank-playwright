@@ -1,7 +1,6 @@
 import { test as base } from '@playwright/test';
 
 import { BasePage } from 'src/pages/base.page';
-import { HomePage } from 'src/pages/home.page';
 import { RegisterPage } from 'src/pages/register.page';
 import { OpenNewAccountPage } from 'src/pages/openAccount.page';
 import { AccountOverviewPage } from 'src/pages/accountOverview.page';
@@ -13,7 +12,6 @@ import { RequestLoanPage } from 'src/pages/requestLoan.page';
 
 interface PageObjects {
     basePage: BasePage;
-    homePage: HomePage;
     registerPage: RegisterPage;
     openNewAccountPage: OpenNewAccountPage;
     accountOverviewPage: AccountOverviewPage;
@@ -32,11 +30,6 @@ export const test = base.extend<PageObjects>({
         await use(basePage);
     },
 
-    homePage: async ({ page }, use) => {
-        const homePage = new HomePage(page);
-        await use(homePage);
-    },
-
     registerPage: async ({ page }, use) => {
         const registerPage = new RegisterPage(page);
         await registerPage.goto();
@@ -47,12 +40,7 @@ export const test = base.extend<PageObjects>({
     openNewAccountPage: async ({ page }, use) => {
         const openNewAccountPage = new OpenNewAccountPage(page);
         await openNewAccountPage.goto();
-
-        await openNewAccountPage.container.waitFor({ state: 'visible', timeout: 5000 });
-        // if (!(await openNewAccountPage.openAccountBtn.isEnabled())) {
-        //     throw new Error('Open Account button is not enabled.');
-        // }
-
+        await openNewAccountPage.openAccountForm.waitFor({ state: 'visible', timeout: 5000 });
         await use(openNewAccountPage);
     },
 

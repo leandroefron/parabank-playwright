@@ -61,13 +61,11 @@ export class RequestLoanPage extends BasePage {
      * @param downPayment - The down payment for the loan.
      * @param account - The account to use for the loan.
      */
-    async applyForALoan(loanAmount: number, downPayment: number, account: string): Promise<string | null> {
+    async applyForALoan(loanAmount: number, downPayment: number, account: string): Promise<void> {
         try {
             await this.fillLoanForm(loanAmount, downPayment, account);
+            
             await this.submitBtn.click();
-
-            const result: string = await this.getResultText();
-            return result.trim();
         } catch (error) {
             throw new Error(`Failed to apply for a loan: ${error.message}`);
         }

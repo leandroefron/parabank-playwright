@@ -85,6 +85,7 @@ npm run test:tag --grep @[tag]
 ```
 
 Possibles tags:
+
 - login
 - register
 - customers

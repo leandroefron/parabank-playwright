@@ -1,11 +1,13 @@
 import { test, expect } from '../fixtures/custom.fixture';
 import { getCustomerDetails } from 'src/util/api';
 import { CustomerData } from 'src/types';
+import { TITLES } from 'src/constants';
 
 const updatedProfileData: CustomerData = {
-    firstName: 'FirstNameModified',
-    lastName: 'LastNameModified',
+    address: 'AddressModified',
     city: 'CityModified',
+    state: 'StateModified',
+    zipCode: 'zipCodeModified',
     phoneNumber: '999-111-000'
 };
 
@@ -23,11 +25,13 @@ function validateUpdatedProfileData<T extends Record<string, any>>(expected: Par
 
 test.describe('Customer info tests @all', { tag: ['@customers'] }, () => {
     test('should update customer contact info successfully', async ({ updateInfoPage }) => {
-        await updateInfoPage.fillAndSubmitUpdateForm(updatedProfileData);
+        await updateInfoPage.updateProfile(updatedProfileData);
+
+        const result: string = await updateInfoPage.getResultText();
+        expect(result).toContain(TITLES.PROFILE_UPDATED);
 
         // Retrieve the updated customer details from the API
         const customerDetails: CustomerData = await getCustomerDetails(process.env.CUSTOMER_ID);
-
         validateUpdatedProfileData(updatedProfileData, customerDetails);
     });
 });

@@ -5,8 +5,9 @@ import { normalizeAmount } from 'src/util/helpers';
 
 test.describe('Accounts tests @all', { tag: ['@accounts'] }, () => {
     test('should be able to open a new account successfully', async ({ openNewAccountPage }) => {
-        const result: string = await openNewAccountPage.openNewAccount('0', process.env.CUSTOMER_DEFAULT_ACCOUNT);
+        await openNewAccountPage.openNewAccount('0', process.env.CUSTOMER_DEFAULT_ACCOUNT);
 
+        const result: string = await openNewAccountPage.getResultText();
         expect(result).toContain(TITLES.ACCOUNT_OPENED);
 
         const accountNumber: string = (await openNewAccountPage.newAccountNumber.textContent())?.trim();
