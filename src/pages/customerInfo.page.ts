@@ -52,11 +52,9 @@ export class UpdateInfoPage extends BasePage {
     }
 
     /**
-     * Fills a specific input field.
+     * Fills the update profile form with the provided data.
      *
-     * @param input - The locator for the input field.
-     * @param field - The name of the field being updated.
-     * @param value - The value to fill in the field.
+     * @param fieldsToUpdate - The fields to update with their new values.
      */
     private async fillProfileForm(fieldsToUpdate: CustomerData): Promise<void> {
         for (const [field, value] of Object.entries(fieldsToUpdate)) {

@@ -15,7 +15,7 @@ export default defineConfig({
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: process.env.CI ? 1 : 10,
+    workers: process.env.CI ? 1 : 5,
 
     // Timeouts for assertions
     expect: {
@@ -27,10 +27,8 @@ export default defineConfig({
         ['html', { open: 'never', outputFolder: 'reports' }],
         ['list', { printSteps: true }]
     ],
-    /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
-        // baseURL: 'https://parabank.parasoft.com',
-        baseURL: 'http://localhost:8080/parabank',
+        baseURL: process.env.BASE_URL,
 
         actionTimeout: 1000,
         trace: 'on-first-retry',

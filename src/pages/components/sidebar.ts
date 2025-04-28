@@ -1,5 +1,6 @@
 import { Page } from '@playwright/test';
 import { AccountOverviewPage } from '../accountOverview.page';
+import { waitUntilClickable } from '@/util/helpers';
 
 export class Sidebar {
     constructor(private page: Page) {}
@@ -68,8 +69,12 @@ export class Sidebar {
      * @param password - The password of the user.
      */
     async loginUser(username: string, password: string) {
+        await this.loginPanel.waitFor({ state: 'visible' });
+
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
+
+        await waitUntilClickable(this.logInBtn);
         await this.logInBtn.click();
     }
 
@@ -93,6 +98,7 @@ export class Sidebar {
      * @returns An instance of the `AccountOverviewPage`.
      */
     async openAccountsOverview(): Promise<AccountOverviewPage> {
+        await this.accountsOverviewLnk.waitFor({ state: 'visible' });
         await this.accountsOverviewLnk.click();
         return new AccountOverviewPage(this.page);
     }

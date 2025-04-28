@@ -15,6 +15,10 @@ export class BasePage {
         return this.page.getByTestId('rightPanel');
     }
 
+    get title() {
+        return this.rightPanelContainer.locator('.title').first();
+    }
+
     // Actions
     async goto(url: string = '/parabank'): Promise<void> {
         await this.page.goto(url);
@@ -27,6 +31,11 @@ export class BasePage {
      */
     async getResultLocator(): Promise<Locator | null> {
         const items = this.rightPanelContainer.locator(':scope > div > div');
+        const elementName: string = await items.nth(0).getAttribute('id');
+
+        if (elementName !== 'showOverview') {
+            await this.page.getByTestId(elementName).waitFor({ state: 'hidden', timeout: 5000 });
+        }
 
         for (let i: number = 0; i < (await items.count()); i++) {
             const item: Locator = items.nth(i);
@@ -46,7 +55,7 @@ export class BasePage {
      * @returns The result text, including the title and body if available.
      */
     async getResultText(): Promise<string> {
-        await this.page.waitForTimeout(1500);
+        // await this.page.waitForTimeout(1000);
 
         const result: Locator = await this.getResultLocator();
 

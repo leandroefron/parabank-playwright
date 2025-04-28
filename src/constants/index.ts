@@ -25,7 +25,7 @@ export const MESSAGES = {
 export const TITLES = {
     WELCOME: 'Welcome {name}',
     CUSTOMER_LOGIN: 'Customer Login',
-    ACCOUNTS_OVERVIEWS: 'Accounts Overview',
+    ACCOUNTS_OVERVIEW: 'Accounts Overview',
     ACCOUNT_OPENED: 'Account Opened!',
     BILL_PAY_COMPLETE: 'Bill Payment Complete',
     TRANSFER_COMPLETE: 'Transfer Complete!',

@@ -1,4 +1,4 @@
-import { APIRequestContext, Locator, request } from '@playwright/test';
+import { APIRequestContext, Locator, request, expect } from '@playwright/test';
 import { AccountData, TxData, CustomerData } from '@/interfaces';
 import * as api from './api';
 
@@ -150,4 +150,16 @@ export async function getTransactionId(accountId: string, type: string, amount: 
  */
 export function normalizeAmount(amount: number | string): string {
     return parseFloat(amount.toString()).toFixed(2);
+}
+
+/**
+ * Waits for an element to be visible and enabled (clickable).
+ * @param locator Playwright Locator of the element
+ * @param timeout Optional timeout in milliseconds (default 30 seconds)
+ */
+export async function waitUntilClickable(locator: Locator, timeout = 30000): Promise<void> {
+    await locator.waitFor({ state: 'visible', timeout });
+    await locator.waitFor({ state: 'attached', timeout });
+    await locator.waitFor({ timeout }); // Give some extra time if necessary
+    await expect(locator).toBeEnabled({ timeout });
 }

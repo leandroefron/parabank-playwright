@@ -9,7 +9,7 @@ test.describe('Login page @all', { tag: ['@login'] }, () => {
         await basePage.sidebar.loginUser(username, customerData.password);
 
         const result: string = await basePage.getResultText();
-        expect(result).toContain(TITLES.ACCOUNTS_OVERVIEWS);
+        expect(result).toContain(TITLES.ACCOUNTS_OVERVIEW);
 
         const completeName: string = `${customerData.firstName} ${customerData.lastName}`;
         expect.soft(basePage.sidebar.welcomeMsg).toHaveText(`Welcome ${completeName}`);
