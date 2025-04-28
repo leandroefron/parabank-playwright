@@ -55,8 +55,6 @@ export class BasePage {
      * @returns The result text, including the title and body if available.
      */
     async getResultText(): Promise<string> {
-        // await this.page.waitForTimeout(1000);
-
         const result: Locator = await this.getResultLocator();
 
         if (!result) {

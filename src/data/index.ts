@@ -11,10 +11,8 @@ export const customerData: CustomerData = {
     phoneNumber: '555-666-777',
     ssn: '12456789',
     username: '',
-    password: 'a',
-    confirmPassword: 'a'
-    // password: 'Password123!',
-    // confirmPassword: 'Password123!'
+    password: 'Password123!',
+    confirmPassword: 'Password123!'
 };
 
 export const billPayData: BillPayData = {
