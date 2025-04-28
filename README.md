@@ -23,9 +23,9 @@ parabank-playwright/
 │   ├── constants/               # → URLs, messages, titles
 │   ├── data/                    # → Test data (JSON, CSV, etc.)
 │   ├── fixtures/                # → Reusable test setup/teardown logic
+│   ├── interfaces/              # → TypeScript interfaces & types
 │   ├── pages/                   # → Page Object Model classes (LoginPage, RequestLoan, etc.)
 │   ├── tests/                   # → Actual test specs
-│   ├── types/                   # → TypeScript interfaces & types
 │   └── util/                    # → Helper and api functions
 │
 ├── test-results/                # 🖼 Screenshots, traces, etc.
