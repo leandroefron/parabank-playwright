@@ -23,7 +23,7 @@ function validateUpdatedProfileData<T extends Record<string, any>>(expected: Par
     }
 }
 
-test.describe('Customer info tests @all', { tag: ['@customers'] }, () => {
+test.describe('Customer info tests', { tag: ['@customers'] }, () => {
     test('should update customer contact info successfully', async ({ updateInfoPage }) => {
         await updateInfoPage.updateProfile(updatedProfileData);
 

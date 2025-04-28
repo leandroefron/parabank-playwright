@@ -5,7 +5,7 @@ import { TITLES, MESSAGES } from '@/constants';
 const account: string = process.env.CUSTOMER_DEFAULT_ACCOUNT;
 let availableBalance: number;
 
-test.describe.serial('Request Loan tests @all', { tag: ['@loans'] }, () => {
+test.describe.serial('Request Loan tests', { tag: ['@loans'] }, () => {
     test.beforeAll(async () => {
         availableBalance = await getBalanceFromAccount(account);
     });

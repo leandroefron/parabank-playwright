@@ -15,8 +15,8 @@ const validationFields: Array<{ tag: string; field: string }> = [
     { tag: 'Password confirmation', field: 'confirmPassword' }
 ];
 
-test.describe('Register page @all', { tag: ['@register'] }, () => {
-    test('should successfully register a new customer @all', async ({ registerPage }) => {
+test.describe('Register page', { tag: ['@register'] }, () => {
+    test('should successfully register a new customer', async ({ registerPage }) => {
         const username: string = await registerPage.registerCustomer(customerData, true);
 
         const expectedWelcomeMsg: string = TITLES.WELCOME.replace('{name}', username);

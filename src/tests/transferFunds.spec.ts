@@ -7,7 +7,7 @@ import * as api from 'src/util/api';
 const fromAccountId: string = process.env.CUSTOMER_DEFAULT_ACCOUNT;
 let destinationAccountId: string;
 
-test.describe('Transfer funds tests @all', { tag: ['@transfers'] }, () => {
+test.describe('Transfer funds tests', { tag: ['@transfers'] }, () => {
     test.beforeAll(async () => {
         destinationAccountId = await createDestinationAccount();
     });

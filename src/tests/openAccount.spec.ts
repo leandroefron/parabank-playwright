@@ -3,7 +3,7 @@ import { AccountOverviewPage } from 'src/pages/accountOverview.page';
 import { MINIMUM_BALANCE, TITLES } from '@/constants';
 import { normalizeAmount } from 'src/util/helpers';
 
-test.describe('Accounts tests @all', { tag: ['@accounts'] }, () => {
+test.describe('Accounts tests', { tag: ['@accounts'] }, () => {
     test('should be able to open a new account successfully', async ({ openNewAccountPage }) => {
         await openNewAccountPage.openNewAccount('0', process.env.CUSTOMER_DEFAULT_ACCOUNT);
 

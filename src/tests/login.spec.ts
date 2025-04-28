@@ -4,7 +4,7 @@ import { URLS, TITLES } from '@/constants';
 
 const username: string = process.env.CUSTOMER_USERNAME;
 
-test.describe('Login page @all', { tag: ['@login'] }, () => {
+test.describe('Login page', { tag: ['@login'] }, () => {
     test('should login successfully with valid credentials', async ({ basePage, accountOverviewPage }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
 

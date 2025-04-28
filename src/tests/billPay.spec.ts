@@ -25,7 +25,7 @@ const validationFields: Array<{ field: string; expectedMsg: string }> = [
     { field: 'amount', expectedMsg: 'The amount cannot be empty.' }
 ];
 
-test.describe.serial('Bill Pay tests @all', { tag: ['@bills'] }, () => {
+test.describe.serial('Bill Pay tests', { tag: ['@bills'] }, () => {
     test('should successfully pay a bill', async ({ billPayPage }) => {
         await billPayPage.payBill(billPayData, true);
 
