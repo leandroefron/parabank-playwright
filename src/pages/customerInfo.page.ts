@@ -66,7 +66,7 @@ export class UpdateInfoPage extends BasePage {
                 throw new Error(`Field "${field}" is not editable.`);
             }
 
-            await this.page.waitForTimeout(100);
+            await this.page.waitForTimeout(200);
             await input.fill(value);
         }
     }

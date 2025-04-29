@@ -102,7 +102,7 @@ export class TransactionsPage extends BasePage {
         await inputField.fill(value);
         await searchButton.click();
 
-        const result: string = await this.getResultText();
+        const result: string = await this.getVisibleResultText();
         return result.trim();
     }
 

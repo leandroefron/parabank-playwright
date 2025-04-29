@@ -33,3 +33,9 @@ export const TITLES = {
     TRANSACTION_RESULTS: 'Transaction Results',
     PROFILE_UPDATED: 'Profile Updated'
 };
+
+export const ACCOUNT_TYPES = {
+    CHECKING: '0',
+    SAVINGS: '1',
+    LOAN: '2'
+};

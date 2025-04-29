@@ -1,13 +1,13 @@
 import { test, expect } from '@/fixtures/custom.fixture';
 import { AccountOverviewPage } from 'src/pages/accountOverview.page';
-import { MINIMUM_BALANCE, TITLES } from '@/constants';
+import { MINIMUM_BALANCE, TITLES, ACCOUNT_TYPES } from '@/constants';
 import { normalizeAmount } from 'src/util/helpers';
 
 test.describe('Accounts tests', { tag: ['@accounts'] }, () => {
     test('should be able to open a new account successfully', async ({ openNewAccountPage }) => {
-        await openNewAccountPage.openNewAccount('0', process.env.CUSTOMER_DEFAULT_ACCOUNT);
+        await openNewAccountPage.openNewAccount(ACCOUNT_TYPES.CHECKING, process.env.CUSTOMER_DEFAULT_ACCOUNT);
 
-        const result: string = await openNewAccountPage.getResultText();
+        const result: string = await openNewAccountPage.getVisibleResultText();
         expect(result).toContain(TITLES.ACCOUNT_OPENED);
 
         const accountNumber: string = (await openNewAccountPage.newAccountNumber.textContent())?.trim();

@@ -19,6 +19,10 @@ export class BasePage {
         return this.rightPanelContainer.locator('.title').first();
     }
 
+    get descriptionMsg() {
+        return this.rightPanelContainer.locator('p').first();
+    }
+
     // Actions
     async goto(url: string = '/parabank'): Promise<void> {
         await this.page.goto(url);
@@ -31,7 +35,13 @@ export class BasePage {
      */
     async getResultLocator(): Promise<Locator | null> {
         const items = this.rightPanelContainer.locator(':scope > div > div');
+
+        if (await items.count() === 0) {
+            return this.rightPanelContainer;
+        }
+
         const elementName: string = await items.nth(0).getAttribute('id');
+
 
         if (elementName !== 'showOverview') {
             await this.page.getByTestId(elementName).waitFor({ state: 'hidden', timeout: 5000 });
@@ -50,11 +60,11 @@ export class BasePage {
     }
 
     /**
-     * Retrieves the result text from the right panel container.
+     * Retrieves the visible result text from the right panel container.
      *
      * @returns The result text, including the title and body if available.
      */
-    async getResultText(): Promise<string> {
+    async getVisibleResultText(): Promise<string> {
         const result: Locator = await this.getResultLocator();
 
         if (!result) {
@@ -73,4 +83,5 @@ export class BasePage {
 
         return title.trim();
     }
+
 }

@@ -8,7 +8,7 @@ test.describe('Login page', { tag: ['@login'] }, () => {
     test('should login successfully with valid credentials', async ({ basePage, accountOverviewPage }) => {
         await basePage.sidebar.loginUser(username, customerData.password);
 
-        const result: string = await basePage.getResultText();
+        const result: string = await basePage.getVisibleResultText();
         expect(result).toContain(TITLES.ACCOUNTS_OVERVIEW);
 
         const completeName: string = `${customerData.firstName} ${customerData.lastName}`;

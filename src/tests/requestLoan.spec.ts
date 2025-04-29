@@ -16,7 +16,7 @@ test.describe.serial('Request Loan tests', { tag: ['@loans'] }, () => {
 
         await requestLoanPage.applyForALoan(loanAmount, downPayment, account);
 
-        const result: string = await requestLoanPage.getResultText();
+        const result: string = await requestLoanPage.getVisibleResultText();
         expect(result).toContain(TITLES.LOAN_PROCESSED);
 
         const newAccountId: string = await getNewAccountId(requestLoanPage);
@@ -30,7 +30,7 @@ test.describe.serial('Request Loan tests', { tag: ['@loans'] }, () => {
 
         await requestLoanPage.applyForALoan(loanAmount, downPayment, account);
 
-        const result: string = await requestLoanPage.getResultText();
+        const result: string = await requestLoanPage.getVisibleResultText();
         expect(result).toContain(TITLES.LOAN_PROCESSED);
 
         expect(requestLoanPage.loanStatus).toHaveText('Denied');

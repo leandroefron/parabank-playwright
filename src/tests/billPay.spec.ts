@@ -29,7 +29,7 @@ test.describe.serial('Bill Pay tests', { tag: ['@bills'] }, () => {
     test('should successfully pay a bill', async ({ billPayPage }) => {
         await billPayPage.payBill(billPayData, true);
 
-        const result: string = await billPayPage.getResultText();
+        const result: string = await billPayPage.getVisibleResultText();
         expect(result).toContain(TITLES.BILL_PAY_COMPLETE);
 
         tx.accountId = (await billPayPage.fromAccountIdResult.textContent())?.trim();
@@ -37,15 +37,6 @@ test.describe.serial('Bill Pay tests', { tag: ['@bills'] }, () => {
 
         const expectedMsg = `Bill Payment to ${billPayData.payeeName} in the amount of $${normalizeAmount(BILL_PAY_AMOUNT)} from account ${process.env.CUSTOMER_DEFAULT_ACCOUNT} was successful.`;
         expect(billPayPage.resultMessage).toHaveText(expectedMsg);
-    });
-
-    validationFields.forEach(({ field, expectedMsg }) => {
-        test(`should show validation error when '${field}' is empty`, async ({ billPayPage }) => {
-            await billPayPage.payBill(billPayData, true, field);
-
-            const errorMsg: string = (await billPayPage.getErrorMessage(field)).trim();
-            expect(errorMsg).toBe(expectedMsg);
-        });
     });
 
     test('should find a transaction by ID', async ({ transactionsPage }) => {
@@ -59,6 +50,19 @@ test.describe.serial('Bill Pay tests', { tag: ['@bills'] }, () => {
     test('should find a transaction by amount', async ({ transactionsPage }) => {
         await verifyTransactionSearch(transactionsPage, 'findByTransactionAmount', tx.accountId, tx.amount);
     });
+});
+
+test.describe('Bill Pay - Mandatory fields', { tag: ['@bills'] }, () => {
+    validationFields.forEach(({ field, expectedMsg }) => {
+        test(`should show validation error when '${field}' is empty`, async ({ billPayPage }) => {
+            await billPayPage.payBill(billPayData, true, field);
+
+            const errorMsg: string = (await billPayPage.getErrorMessage(field)).trim();
+            expect(errorMsg).toBe(expectedMsg);
+        });
+    });
+
+    
 });
 
 /**

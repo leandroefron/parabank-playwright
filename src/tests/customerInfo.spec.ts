@@ -27,7 +27,7 @@ test.describe('Customer info tests', { tag: ['@customers'] }, () => {
     test('should update customer contact info successfully', async ({ updateInfoPage }) => {
         await updateInfoPage.updateProfile(updatedProfileData);
 
-        const result: string = await updateInfoPage.getResultText();
+        const result: string = await updateInfoPage.getVisibleResultText();
         expect(result).toContain(TITLES.PROFILE_UPDATED);
 
         // Retrieve the updated customer details from the API
